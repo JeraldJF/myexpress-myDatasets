@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon dataSets.ts",
-    "test":"mocha"
+    "test": "mocha"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^18.14.5",
     "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
     "mocha": "^10.2.0",
     "pstree.remy": "^1.1.0"
   },
@@ -28,5 +29,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeraldJF/myexpress-myDatasets.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JeraldJF/myexpress-myDatasets/issues"
+  },
+  "homepage": "https://github.com/JeraldJF/myexpress-myDatasets#readme",
   "description": ""
 }

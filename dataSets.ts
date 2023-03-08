@@ -1,9 +1,10 @@
 import { error } from "console";
 
 
+
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3001
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const { Client } = require("pg");
@@ -32,6 +33,8 @@ app.get("/dataset/get", (req: any, res: any) => {
   }
   }
   connectDb();
+  // console.log("hi");
+  
   
 });
 
@@ -98,16 +101,23 @@ app.post("/dataset/create", (req: any, res: any) => {
 
       await client.connect();
       // console.log(`INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date) VALUES('${id}', ${dataSchema}, ${routerConfig}, ${status1}, ${createdBy}, ${updatedBy}, ${createdDate});`);
+     
+      // console.log(await client.query(`SELECT id FROM datasets WHERE '${id}'=id`));
+      const pK=await client.query(`SELECT * FROM datasets WHERE '${id}'=id`);      
+      if(pK.rowCount==0){
       
       await client.query(
-        `INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}');`,(error:any)=>{
-        if(error.code==23505 && error.constraint=='datasets_pkey'){
-          console.log(error.severity);
-          console.log(error.detail);
-        }
-      }
+        `INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}');`);
+        // if(error.code==23505 && error.constraint=='datasets_pkey'){
+        //   console.log(error.severity);
+        //   console.log(error.detail);
         
-        );
+    }
+    else{
+      console.log("Primary key voilation");
+
+      
+    }
             
         
       // const res2=await client.query(`UPDATE datasets SET data_schema = $1 WHERE id= $2`,[dataSchema,id]);

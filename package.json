@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon dataSets.ts"
+    "start": "nodemon dataSets.ts",
+    "test":"mocha"
   },
   "dependencies": {
     "body-parser": "^1.20.2",

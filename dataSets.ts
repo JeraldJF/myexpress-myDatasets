@@ -102,6 +102,7 @@ app.post("/dataset/create", (req: any, res: any) => {
 
       // console.log(req.body.dname);
 
+      
       var id = req.body.id;
       var name1 = req.body.dname;
       var age = req.body.age;
@@ -120,25 +121,51 @@ app.post("/dataset/create", (req: any, res: any) => {
       // console.log(createdDate);
 
       await client.connect();
-      
       const pk = await client.query(`SELECT * FROM datasets WHERE '${id}'=id`);
+      const Nid=Number(id);
+
+    
+      
+
 
       if (pk.rowCount == 0) {
-        const count=await client.query(
-          `INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}');`
-        );
-        console.log(count.rows);
-        
+        if(Nid){
+          await client.query(
+            `INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}');`
+          );
+          
+          
+  
+          fs.readFile(
+            __dirname + "/success.json",
+            "utf8",
+            function (err: any, data: any) {
+              var message=JSON.parse(data);
+              
+              res.send(message);
+            }
+          );
+        }
+        else{
+        var detail: string = `JSON Input data missing`;
+        var errorStatus: string = 'ERROR';
+        const obj1:{status:string,message:string}= {
+            status: `${errorStatus}`,
+          message: `${detail}`
+        };
+        const statusJson = JSON.stringify(obj1);
+        // const STST:JSON=JSON.parse(statusJson);
 
-        // fs.readFile(
-        //   __dirname + "/success.json",
-        //   "utf8",
-        //   function (err: any, data: any) {
-        //     var message=JSON.parse(data);
-            
-        //     res.send(message);
-        //   }
-        // );
+        // console.log(typeof STST);
+        // console.log(typeof statusJson);
+        // console.log(statusJson);
+        
+        
+        
+        res.send(statusJson);
+        }
+        
+        
       } else {
         var errorCode: string = "23505";
         var detail: string = `Key (id)=(${id}) already exists.`;

@@ -26,7 +26,7 @@ export default function(req: any, res: any){
   
         var createdDate = created.toLocaleString();
         var updatedDate = updated.toLocaleString();
-        if(getall){
+        
         if (Nid) {
           //datasets given to update
           const pkeyvoilate = await client.query(
@@ -55,7 +55,7 @@ export default function(req: any, res: any){
             };
             res.status(400).json(obj1);
           }
-        }
+        
         } else {
           //no datasets given
           const status: string = "Error";

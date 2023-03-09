@@ -7,11 +7,25 @@ const fs = require("fs");
 const { Client } = require("pg");
 const Joi = require('joi')
 const validator = require('express-joi-validation').createValidator({})
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-export default function(req: any, res: any){
+export default function(req: Request, res: Response){
+    // interface newObj {
+    //   id: string;
+    //   data_schema?: object;
+    //   router_config?: object;
+    //   status?: string;
+    //   created_by?: string;
+    //   updated_by?: string;
+    //   created_date?: Date;
+    //   updated_date?: Date;
+    // }
+    // interface dataObject {
+    //   body: newObj;
+    // }
+    
+  
     const connectDb = async () => {
       try {
         const client = new Client({
@@ -22,14 +36,20 @@ export default function(req: any, res: any){
           port: 5432,
         });
         await client.connect();
+        var id = req.query.id;
+        
+        
+        
   
-        const gotData = await client.query("SELECT * FROM datasets");
-        if (gotData.rowCount > 0) {
-          //display datasets
-          res.send(gotData);
-        } else {
-          //No data in table to display
-          var detail: string = `Table is empty`;
+        const gotData = await client.query(
+          `SELECT * FROM datasets WHERE id='${id}'`
+        );
+  
+        if (gotData.rowCount > 0)
+          res.send(gotData); //datasets with id available to display
+        else {
+          //datasets with id not available to display
+          var detail: string = `Key (id)=(${id}) does not exist.`;
           var errorStatus: string = "ERROR";
           const obj1 = {
             status: `${errorStatus}`,
@@ -38,8 +58,10 @@ export default function(req: any, res: any){
           res.status(400).json(obj1);
         }
         await client.end();
+        return true;
       } catch (error) {
         // Database error
+        console.log(error);
         const obj1 = {
           status: "ERROR",
           message: "Cannot Display Datasets",

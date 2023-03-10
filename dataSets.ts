@@ -1,10 +1,9 @@
 const express = require("express");
-// import { Request, Response } from "express";
+
+
 const app = express();
 const port = 3001;
-// const bodyParser = require("body-parser");
-// const fs = require("fs");
-// const { Client } = require("pg");
+
 // const Joi = require('joi')
 // const validator = require('express-joi-validation').createValidator({})
 import getDataset from "./public/typescripts/getDataSet";
@@ -12,6 +11,7 @@ import addDataset from "./public/typescripts/addDataSets";
 import getDatasetsById from "./public/typescripts/getDatasetById";
 import updateDataSet from "./public/typescripts/updateDataSet";
 import removeDataSet from "./public/typescripts/removeDataSet";
+// import imports from "./public/typescripts/imports";
 
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());

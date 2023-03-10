@@ -3,12 +3,20 @@ const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+import { Pool } from "pg";
 import pool1 from "./Connection";
 
 export default function(req: any, res: any){
     const connectDb = async () => {
       try {
-        const pool = pool1;
+        const pool = new Pool({
+          user: "user1",
+          host: "localhost",
+          database: "datasets",
+          password: "JER@ALD",
+          port: 5432,
+        });
+      ;
         await pool.connect();
         var id = req.body.id;
         var Nid = Number(id);
@@ -68,7 +76,7 @@ export default function(req: any, res: any){
           status: "ERROR",
           message: "Cannot update datasets",
         };
-        res.status(500).json(500);
+        res.status(500).json(obj1);
       }
     };
     connectDb();

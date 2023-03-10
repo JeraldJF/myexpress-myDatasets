@@ -1,5 +1,6 @@
 
 import { Request, Response } from "express";
+import { Pool } from "pg";
 import pool1 from "./Connection";
 
 const express = require("express");
@@ -27,7 +28,14 @@ export default function(req: Request, res: Response){
   
     const connectDb = async () => {
       try {
-        const pool = pool1;
+        const pool = new Pool({
+          user: "user1",
+          host: "localhost",
+          database: "datasets",
+          password: "JER@ALD",
+          port: 5432,
+        });
+      ;
         await pool.connect();
         var id = req.query.id;
         var Nid=Number(id);

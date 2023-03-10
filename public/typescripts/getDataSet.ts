@@ -1,7 +1,9 @@
+import { Pool } from "pg";
+
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-import pool1 from "./Connection";
+const pool1=require("./Connection");
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -10,7 +12,14 @@ app.use(express.json());
 export default function(req: any, res: any){
     const connectDb = async () => {
       try {
-        const pool = pool1;
+        const pool = new Pool({
+          user: "user1",
+          host: "localhost",
+          database: "datasets",
+          password: "JER@ALD",
+          port: 5432,
+        });
+      ;
         await pool.connect();
   
         const gotData = await pool.query("SELECT * FROM datasets");

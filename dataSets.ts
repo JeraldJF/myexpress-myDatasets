@@ -9,8 +9,9 @@ const port = 3001;
 // const validator = require('express-joi-validation').createValidator({})
 import getDataset from "./public/typescripts/getDataSet";
 import addDataset from "./public/typescripts/addDataSets";
-import getDatasetsById from "./public/typescripts/getDatasetsById";
+import getDatasetsById from "./public/typescripts/getDatasetById";
 import updateDataSet from "./public/typescripts/updateDataSet";
+import removeDataSet from "./public/typescripts/removeDataSet";
 
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -34,8 +35,13 @@ app.post("/dataset/create", addDataset);
 
 app.put("/dataset/updateData", updateDataSet);
 
+app.delete("/dataset/removeData", removeDataSet);
 
 
-app.listen(port, () => {
+
+app.listen(port, (error:any) => {
+  if(error)
+  console.log(`error at port ${port}`);
+  else
   console.log(`port number ${port} is working`);
 });

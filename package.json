@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.14.5",
+    "@types/pg": "^8.6.6",
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
     "mocha": "^10.2.0",

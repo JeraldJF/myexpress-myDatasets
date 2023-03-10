@@ -1,27 +1,16 @@
 const express = require("express");
-// import { Request, Response } from "express";
 const app = express();
-// const port = 3001;
 const bodyParser = require("body-parser");
-// const fs = require("fs");
-const { Client } = require("pg");
-// const Joi = require('joi')
-// const validator = require('express-joi-validation').createValidator({})
+import pool1 from "./Connection";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 export default function(req: any, res: any){
     const connectDb = async () => {
-      let pK: any;
+      
       try {
-        const client = new Client({
-          user: "user1",
-          host: "localhost",
-          database: "datasets",
-          password: "JER@ALD",
-          port: 5432,
-        });
-        if(client.password=="JER@ALD"){ //Checking for password
+        const pool = pool1;
+        // if(pool.password=="JER@ALD"){ //Checking for password
   
         // console.log(req.body.dname);
   
@@ -37,15 +26,15 @@ export default function(req: any, res: any){
         var cDate = new Date();
         var createdDate = cDate.toLocaleString();
   
-        await client.connect();
-        const pk = await client.query(`SELECT * FROM datasets WHERE '${id}'=id`);
+        await pool.connect();
+        const pk = await pool.query(`SELECT * FROM datasets WHERE '${id}'=id`);
         const Nid = Number(id);
   
         if (Nid) {
           //datasets provided to post
           if (pk.rowCount == 0) {
             //primary key not voilated
-            await client.query(
+            await pool.query(
               `INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}');`
             );
   
@@ -80,18 +69,18 @@ export default function(req: any, res: any){
           res.status(400).json(obj1);
         }
   
-        await client.end();
+        await pool.end();
         return true;
-      }
-      else{
-        var detail: string = `Database Password Incorrect`;
-          var errorStatus: string = "ERROR";
-          const obj1: { status: string; message: string } = {
-            status: `${errorStatus}`,
-            message: `${detail}`,
-          };
-          res.status(500).json(obj1);
-      }
+      // }
+      // else{
+      //   var detail: string = `Database Password Incorrect`;
+      //     var errorStatus: string = "ERROR";
+      //     const obj1: { status: string; message: string } = {
+      //       status: `${errorStatus}`,
+      //       message: `${detail}`,
+      //     };
+      //     res.status(500).json(obj1);
+      // }
       } catch (error: any) {
         // Database error
         const obj1 = {

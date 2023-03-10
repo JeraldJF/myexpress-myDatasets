@@ -1,8 +1,11 @@
-const express = require("express");
+
 import { Request, Response } from "express";
-const app = express();
+import pool1 from "./Connection";
+
+const express = require("express");
 const bodyParser = require("body-parser");
-const { Client } = require("pg");
+const app = express();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -24,27 +27,20 @@ export default function(req: Request, res: Response){
   
     const connectDb = async () => {
       try {
-        const client = new Client({
-          user: "user1",
-          host: "localhost",
-          database: "datasets",
-          password: "JER@ALD",
-          port: 5432,
-        });
-        await client.connect();
+        const pool = pool1;
+        await pool.connect();
         var id = req.query.id;
-        
-        
-        
-  
-        const gotData = await client.query(
+        var Nid=Number(id);
+
+        if(Nid){ //User provided id to retreive datasets
+        const dataById = await pool.query(
           `SELECT * FROM datasets WHERE id='${id}'`
         );
   
-        if (gotData.rowCount > 0)
-          res.send(gotData); //datasets with id available to display
+        if (dataById.rowCount > 0) //datasets with id available to display
+          res.send(dataById); 
         else {
-          //datasets with id not available to display
+          //datasets with id not available to display from the database
           var detail: string = `Key (id)=(${id}) does not exist.`;
           var errorStatus: string = "ERROR";
           const obj1 = {
@@ -53,7 +49,18 @@ export default function(req: Request, res: Response){
           };
           res.status(400).json(obj1);
         }
-        await client.end();
+      }
+      else{ //id not provided by the user
+        var detail: string = `Datasets with Key (id)=(${id}) does not exist. Cannot retrieve datasets`;
+            var errorStatus: string = "ERROR";
+            const obj1 = {
+              status: `${errorStatus}`,
+              message: `${detail}`,
+            };
+            res.status(400).json(obj1);
+
+      }
+        await pool.end();
         return true;
       } catch (error) {
         // Database error

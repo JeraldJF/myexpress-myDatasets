@@ -10,28 +10,28 @@ export default function(req: any, res: any){
       try {
         const pool = pool1;
         await pool.connect();
-        var id = req.body.id;
+        var id = req.query.id;
         var Nid = Number(id);
-        var rc = req.body.router_config;
-        var routerConfig = JSON.stringify(rc);
-        var created = new Date();
-        var updated = new Date();
-  
-        var createdDate = created.toLocaleString();
-        var updatedDate = updated.toLocaleString();
         
         if (Nid) {
-          //datasets given to update
+          //datasets given to delete
           const pkeyvoilate = await pool.query(
             `SELECT * FROM datasets WHERE '${id}'=id`
           );
           if (pkeyvoilate.rowCount == 1) {
-            //given id present in datasets to update
+            //given id present in datasets to delete
+
+
+            //work on (id persent in datasets) from the below query
+
             await pool.query(
-              `UPDATE datasets SET created_date='${createdDate}',updated_date='${updatedDate}',router_config='${routerConfig}' WHERE id = '${id}';`
+              `DELETE FROM datasets WHERE id=${id}';`
             );
-            var detail: string = `datasets updated in the table successfully`;
+            var detail: string = `datasets deleted from the table successfully`;
             var status: string = "SUCCESS";
+
+
+
             const obj1 = {
               status: `${status}`,
               message: `${detail}`,
@@ -40,7 +40,7 @@ export default function(req: any, res: any){
             res.status(200).json(obj1);
           } else {
             //datasets with key not available in database to update
-            var detail: string = `Datasets with Key (id)=(${id}) does not exist. Cannot Update`;
+            var detail: string = `Datasets with Key (id)=(${id}) does not exist. Cannot Delete`;
             var errorStatus: string = "ERROR";
             const obj1 = {
               status: `${errorStatus}`,
@@ -52,7 +52,7 @@ export default function(req: any, res: any){
         } else {
           //no datasets given
           const status: string = "Error";
-          const message: string = "No Datasets given to Update";
+          const message: string = "No inputs given for deletion";
           const objmessage: object = {
             status: `${status}`,
             message: `${message}`,
@@ -66,7 +66,7 @@ export default function(req: any, res: any){
         // Database error
         const obj1 = {
           status: "ERROR",
-          message: "Cannot update datasets",
+          message: "Cannot delete datasets",
         };
         res.status(500).json(500);
       }

@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const { Client } = require("pg");
+import pool1 from "./Connection";
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -10,16 +10,10 @@ app.use(express.json());
 export default function(req: any, res: any){
     const connectDb = async () => {
       try {
-        const client = new Client({
-          user: "user1",
-          host: "localhost",
-          database: "datasets",
-          password: "JER@ALD",
-          port: 5432,
-        });
-        await client.connect();
+        const pool = pool1;
+        await pool.connect();
   
-        const gotData = await client.query("SELECT * FROM datasets");
+        const gotData = await pool.query("SELECT * FROM datasets");
         if (gotData.rowCount > 0) {
           //display datasets
           res.send(gotData);
@@ -33,7 +27,7 @@ export default function(req: any, res: any){
           };
           res.status(400).json(obj1);
         }
-        await client.end();
+        await pool.end();
       } catch (error) {
         // Database error
         const obj1 = {

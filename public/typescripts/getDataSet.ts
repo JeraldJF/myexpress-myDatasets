@@ -3,7 +3,7 @@ import { Pool } from "pg";
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const pool1=require("./Connection");
+// const pool1=require("./Connection");
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,7 +19,7 @@ export default function(req: any, res: any){
           password: "JER@ALD",
           port: 5432,
         });
-      ;
+      
         await pool.connect();
   
         const gotData = await pool.query("SELECT * FROM datasets");

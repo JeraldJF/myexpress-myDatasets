@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 import { Pool } from "pg";
-import pool1 from "./Connection";
+// import pool2 from "./Connection";
 
 export default function(req: any, res: any){
     const connectDb = async () => {
@@ -16,7 +16,7 @@ export default function(req: any, res: any){
           password: "JER@ALD",
           port: 5432,
         });
-      ;
+      
         await pool.connect();
         var id = req.body.id;
         var Nid = Number(id);

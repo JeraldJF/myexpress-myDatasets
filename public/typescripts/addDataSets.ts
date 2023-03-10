@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 import { Pool } from "pg";
-import pool1 from "./Connection";
+// import pool1 from "./Connection";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -17,7 +17,7 @@ export default function(req: any, res: any){
           password: "JER@ALD",
           port: 5432,
         });
-      ;
+      
         // if(pool.password=="JER@ALD"){ //Checking for password
   
         // console.log(req.body.dname);

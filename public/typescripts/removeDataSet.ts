@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 import { Pool } from "pg";
-import pool1 from "./Connection";
+// import pool1 from "./Connection";
 
 export default function (req: any, res: any) {
   const connectDb = async () => {

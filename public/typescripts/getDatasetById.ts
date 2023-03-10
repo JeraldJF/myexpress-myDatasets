@@ -1,11 +1,12 @@
 
 import { Request, Response } from "express";
 import { Pool } from "pg";
-import pool1 from "./Connection";
+
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+// const pool1=require("./Connection");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -35,7 +36,7 @@ export default function(req: Request, res: Response){
           password: "JER@ALD",
           port: 5432,
         });
-      ;
+      
         await pool.connect();
         var id = req.query.id;
         var Nid=Number(id);

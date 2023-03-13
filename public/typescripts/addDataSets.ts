@@ -6,7 +6,7 @@ import { Pool } from "pg";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 const Joi = require("joi");
-// const validator = require("express-joi-validation").createValidator({});
+
 
 const querySchema = Joi.object({
   id: Joi.string().required(),
@@ -16,6 +16,7 @@ const querySchema = Joi.object({
   created_by: Joi.string().required(),
   updated_by: Joi.string().required(),
 });
+
 export default function (req: any, res: any) {
   const { error } = querySchema.validate(req.body, {
     abortEarly: false,

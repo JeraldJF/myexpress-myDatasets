@@ -1,17 +1,16 @@
-// const {Pool}=require("pg");
+// const {Client}=require("pg");
 
-// const pool1 = new Pool({
+// const pool = new Client({
 //     user: "user1",
 //     host: "localhost",
 //     database: "datasets",
 //     password: "JER@ALD",
-//     port: 5432,
+//     port: 5432
 //   });
 
-  
+//   pool.connect();
 
-
-// module.exports={pool1};
+// export default pool;
 
 
 

@@ -1,11 +1,11 @@
 const express = require("express");
 
 
-const app = express();
+
+var app = express();
 const port = 3001;
 
-// const Joi = require('joi')
-// const validator = require('express-joi-validation').createValidator({})
+
 import getDataset from "./public/typescripts/getDataSet";
 import addDataset from "./public/typescripts/addDataSets";
 import getDatasetsById from "./public/typescripts/getDatasetById";
@@ -17,14 +17,7 @@ import removeDataSet from "./public/typescripts/removeDataSet";
 app.use(express.json());
 
 
-// const querySchema = Joi.object({
-//   id: Joi.string().required()
-//   // ds: Joi.object().required(),
-//   // rc: Joi.object().required(),
-//   // status1:Joi.string().required(),
-//   // created_by:Joi.string().required(),
-//   // updated_by:Joi.string().required()
-// });
+
 
 
 app.get("/dataset/get", getDataset);
@@ -45,3 +38,5 @@ app.listen(port, (error:any) => {
   else
   console.log(`port number ${port} is working`);
 });
+
+module.exports=app;

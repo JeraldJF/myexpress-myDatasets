@@ -48,8 +48,11 @@ export default function (req: any, res: any) {
 
       var cDate = new Date();
       var uDate = new Date();
-      var createdDate = cDate.toLocaleString();
-      var updatedDate = uDate.toLocaleString();
+      var createdDate = cDate.toLocaleString('en-GB');
+      var updatedDate = uDate.toLocaleString('en-GB');
+
+      
+
 
       await pool.connect();
       const pk = await pool.query(`SELECT * FROM datasets WHERE '${id}'=id`);
@@ -113,6 +116,8 @@ export default function (req: any, res: any) {
         message: "Cannot add datasets",
       };
       res.status(500).json(obj1);
+
+      
     }
   };
   connectDb();

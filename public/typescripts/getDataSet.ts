@@ -18,6 +18,9 @@ export default function (req: any, res: any) {
         password: "JER@ALD",
         port: 5432,
       });
+      // console.log(pool);
+      
+      
 
       await pool.connect();
 
@@ -44,6 +47,8 @@ export default function (req: any, res: any) {
         message: "Cannot Display Datasets",
       };
       res.status(500).json(obj1);
+
+      
     }
   };
   connectDb();

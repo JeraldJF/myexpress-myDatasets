@@ -8,7 +8,6 @@ var addDataSets_1 = require("./addDataSets");
 var getDatasetById_1 = require("./getDatasetById");
 var updateDataSet_1 = require("./updateDataSet");
 var removeDataSet_1 = require("./removeDataSet");
-// import imports from "./public/typescripts/imports";
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.get("/dataset/get", getDataSet_1["default"]);

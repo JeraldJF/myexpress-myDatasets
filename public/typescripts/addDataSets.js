@@ -58,7 +58,7 @@ function default_1(req, res) {
         abortEarly: false
     }).error;
     var connectDb = function () { return __awaiter(_this, void 0, void 0, function () {
-        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, cDate, uDate, createdDate, updatedDate, pk, Nid, detail, Status, obj1, detail, errorStatus, obj1, detail, errorStatus, obj1, error_1, obj1;
+        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, cDate, uDate, createdDate, updatedDate, pk, detail, Status, obj1, detail, errorStatus, obj1, detail, errorStatus, obj1, error_1, obj1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -88,8 +88,9 @@ function default_1(req, res) {
                     return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
                 case 2:
                     pk = _a.sent();
-                    Nid = Number(id);
-                    if (!Nid) return [3 /*break*/, 11];
+                    // console.log(req.body);
+                    console.log();
+                    if (!(req.body != undefined)) return [3 /*break*/, 11];
                     if (!(pk.rowCount == 0)) return [3 /*break*/, 9];
                     if (!error) return [3 /*break*/, 3];
                     return [2 /*return*/, res.status(400).json(error.details)];

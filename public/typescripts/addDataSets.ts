@@ -56,9 +56,12 @@ export default function (req: any, res: any) {
 
       await pool.connect();
       const pk = await pool.query(`SELECT * FROM datasets WHERE '${id}'=id`);
-      const Nid = Number(id);
 
-      if (Nid) {
+      // console.log(req.body);
+      console.log();
+      
+      
+      if (req.body!=undefined) {
         //datasets provided to post  
         if (pk.rowCount == 0) {
           //primary key not voilated

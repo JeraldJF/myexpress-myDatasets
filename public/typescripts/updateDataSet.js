@@ -58,7 +58,7 @@ function default_1(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 11, , 12]);
+                    _a.trys.push([0, 10, , 11]);
                     pool = new pg_1.Pool({
                         user: "user1",
                         host: "localhost",
@@ -77,15 +77,17 @@ function default_1(req, res) {
                     updated = new Date();
                     createdDate = created.toLocaleString();
                     updatedDate = updated.toLocaleString();
-                    if (!Nid) return [3 /*break*/, 8];
-                    return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
-                case 2:
+                    if (!Nid) return [3 /*break*/, 7];
+                    if (!error) return [3 /*break*/, 2];
+                    return [2 /*return*/, res.status(400).json(error.details)];
+                case 2: return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
+                case 3:
                     pkeyvoilate = _a.sent();
-                    if (!(pkeyvoilate.rowCount == 1)) return [3 /*break*/, 6];
-                    if (!error) return [3 /*break*/, 3];
-                    return [2 /*return*/, res.send("Invalid Request: " + JSON.stringify(error))];
-                case 3: return [4 /*yield*/, pool.query("UPDATE datasets SET created_date='".concat(createdDate, "',updated_date='").concat(updatedDate, "',router_config='").concat(routerConfig, "' WHERE id = '").concat(id, "';"))];
+                    if (!(pkeyvoilate.rowCount == 1)) return [3 /*break*/, 5];
+                    //given id present in datasets to update
+                    return [4 /*yield*/, pool.query("UPDATE datasets SET created_date='".concat(createdDate, "',updated_date='").concat(updatedDate, "',router_config='").concat(routerConfig, "' WHERE id = '").concat(id, "';"))];
                 case 4:
+                    //given id present in datasets to update
                     _a.sent();
                     detail = "datasets updated in the table successfully";
                     status = "SUCCESS";
@@ -94,9 +96,8 @@ function default_1(req, res) {
                         message: "".concat(detail)
                     };
                     res.status(200).json(obj1);
-                    _a.label = 5;
-                case 5: return [3 /*break*/, 7];
-                case 6:
+                    return [3 /*break*/, 6];
+                case 5:
                     detail = "Datasets with Key (id)=(".concat(id, ") does not exist. Cannot Update");
                     errorStatus = "ERROR";
                     obj1 = {
@@ -104,9 +105,9 @@ function default_1(req, res) {
                         message: "".concat(detail)
                     };
                     res.status(400).json(obj1);
-                    _a.label = 7;
-                case 7: return [3 /*break*/, 9];
-                case 8:
+                    _a.label = 6;
+                case 6: return [3 /*break*/, 8];
+                case 7:
                     status_1 = "Error";
                     message = "No Datasets given to Update";
                     objmessage = {
@@ -114,20 +115,20 @@ function default_1(req, res) {
                         message: "".concat(message)
                     };
                     res.status(400).json(objmessage);
-                    _a.label = 9;
-                case 9: return [4 /*yield*/, pool.end()];
-                case 10:
+                    _a.label = 8;
+                case 8: return [4 /*yield*/, pool.end()];
+                case 9:
                     _a.sent();
                     return [2 /*return*/, true];
-                case 11:
+                case 10:
                     error_1 = _a.sent();
                     obj1 = {
                         status: "ERROR",
                         message: "Cannot update datasets"
                     };
                     res.status(500).json(obj1);
-                    return [3 /*break*/, 12];
-                case 12: return [2 /*return*/];
+                    return [3 /*break*/, 11];
+                case 11: return [2 /*return*/];
             }
         });
     }); };

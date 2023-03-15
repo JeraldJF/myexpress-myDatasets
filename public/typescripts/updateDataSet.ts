@@ -5,13 +5,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 import { Pool } from "pg";
 const Joi = require("joi");
-// import pool2 from "./Connection";
+
 
 const querySchema = Joi.object({
   id: Joi.string().required(),
   router_config: Joi.object().required(),
 });
 
+//for datatype checking using joi schema
 export default function (req: any, res: any) {
   const { error } = querySchema.validate(req.body, {
     abortEarly: false,
@@ -40,14 +41,16 @@ export default function (req: any, res: any) {
 
       if (Nid) {
         //datasets given to update
-        const pkeyvoilate = await pool.query(
-          `SELECT * FROM datasets WHERE '${id}'=id`
-        );
-        if (pkeyvoilate.rowCount == 1) {
-          //given id present in datasets to update
-          if (error) {
-            return res.send("Invalid Request: " + JSON.stringify(error));
-          } else {
+
+        if (error) { //wrong datatypes use
+          return res.status(400).json(error.details);
+        } else {
+          const pkeyvoilate = await pool.query(
+            `SELECT * FROM datasets WHERE '${id}'=id`
+          );
+          if (pkeyvoilate.rowCount == 1) {
+            //given id present in datasets to update
+
             await pool.query(
               `UPDATE datasets SET created_date='${createdDate}',updated_date='${updatedDate}',router_config='${routerConfig}' WHERE id = '${id}';`
             );
@@ -59,16 +62,16 @@ export default function (req: any, res: any) {
             };
 
             res.status(200).json(obj1);
+          } else {
+            //datasets with key not available in database to update
+            var detail: string = `Datasets with Key (id)=(${id}) does not exist. Cannot Update`;
+            var errorStatus: string = "ERROR";
+            const obj1 = {
+              status: `${errorStatus}`,
+              message: `${detail}`,
+            };
+            res.status(400).json(obj1);
           }
-        } else {
-          //datasets with key not available in database to update
-          var detail: string = `Datasets with Key (id)=(${id}) does not exist. Cannot Update`;
-          var errorStatus: string = "ERROR";
-          const obj1 = {
-            status: `${errorStatus}`,
-            message: `${detail}`,
-          };
-          res.status(400).json(obj1);
         }
       } else {
         //no datasets given

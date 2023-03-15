@@ -23,15 +23,14 @@ export default function (req: Request, res: Response) {
       await pool.connect();
 
       var id = req.query.id;
-      var Nid = Number(id);
 
-      if (Nid) {
+      if (id) {
         //User provided id to retreive datasets
         const dataById = await pool.query(
           `SELECT * FROM datasets WHERE id='${id}'`
         );
 
-        if (dataById.rowCount > 0)
+        if (dataById.rowCount == 1)
           //datasets with id available to display
           res.send(dataById);
         else {
@@ -46,7 +45,7 @@ export default function (req: Request, res: Response) {
         }
       } else {
         //id not provided by the user
-        var detail: string = `Datasets with Key (id)=(${id}) does not exist. Cannot retrieve datasets`;
+        var detail: string = `Id is undefined. Cannot retrieve datasets`;
         var errorStatus: string = "ERROR";
         const obj1 = {
           status: `${errorStatus}`,

@@ -45,7 +45,11 @@ var pg_1 = require("pg");
 var Joi = require("joi");
 var querySchema = Joi.object({
     id: Joi.string().required(),
-    router_config: Joi.object().required()
+    data_schema: Joi.object().required(),
+    router_config: Joi.object().required(),
+    status: Joi.string().required(),
+    created_by: Joi.string().required(),
+    updated_by: Joi.string().required()
 });
 //for datatype checking using joi schema
 function default_1(req, res) {
@@ -54,7 +58,7 @@ function default_1(req, res) {
         abortEarly: false
     }).error;
     var connectDb = function () { return __awaiter(_this, void 0, void 0, function () {
-        var pool, id, Nid, rc, routerConfig, created, updated, createdDate, updatedDate, pkeyvoilate, detail, status, obj1, detail, errorStatus, obj1, status_1, message, objmessage, error_1, obj1;
+        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, created, updated, createdDate, updatedDate, pkeyvoilate, detail, status, obj1, detail, errorStatus, obj1, status_1, message, objmessage, error_1, obj1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -70,14 +74,18 @@ function default_1(req, res) {
                 case 1:
                     _a.sent();
                     id = req.body.id;
-                    Nid = Number(id);
+                    ds = req.body.data_schema;
                     rc = req.body.router_config;
+                    dataSchema = JSON.stringify(ds);
                     routerConfig = JSON.stringify(rc);
+                    status1 = req.body.status;
+                    createdBy = req.body.created_by;
+                    updatedBy = req.body.updated_by;
                     created = new Date();
                     updated = new Date();
-                    createdDate = created.toLocaleString();
-                    updatedDate = updated.toLocaleString();
-                    if (!Nid) return [3 /*break*/, 7];
+                    createdDate = created.toLocaleString("en-GB");
+                    updatedDate = updated.toLocaleString("en-GB");
+                    if (!!(req.body.id == undefined)) return [3 /*break*/, 7];
                     if (!error) return [3 /*break*/, 2];
                     return [2 /*return*/, res.status(400).json(error.details)];
                 case 2: return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
@@ -85,7 +93,7 @@ function default_1(req, res) {
                     pkeyvoilate = _a.sent();
                     if (!(pkeyvoilate.rowCount == 1)) return [3 /*break*/, 5];
                     //given id present in datasets to update
-                    return [4 /*yield*/, pool.query("UPDATE datasets SET created_date='".concat(createdDate, "',updated_date='").concat(updatedDate, "',router_config='").concat(routerConfig, "' WHERE id = '").concat(id, "';"))];
+                    return [4 /*yield*/, pool.query("UPDATE datasets SET data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(createdDate, "',updated_date='").concat(updatedDate, "' WHERE id = '").concat(id, "';"))];
                 case 4:
                     //given id present in datasets to update
                     _a.sent();

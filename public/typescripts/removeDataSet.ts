@@ -20,9 +20,8 @@ export default function (req: any, res: any) {
       await pool.connect();
       var id = req.query.id;
 
-      var Nid = Number(id);
-      if (Nid) {
-        //datasets given to delete
+      if (id) {
+        //id given to delete
         const a = await pool.query(`DELETE FROM datasets WHERE id='${id}';`);
         if (a.rowCount == 1) {
           //valid id to delete

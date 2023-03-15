@@ -46,7 +46,7 @@ app.use(express.json());
 function default_1(req, res) {
     var _this = this;
     var connectDb = function () { return __awaiter(_this, void 0, void 0, function () {
-        var pool, id, Nid, dataById, detail, errorStatus, obj1, detail, errorStatus, obj1, error_1, obj1;
+        var pool, id, dataById, detail, errorStatus, obj1, detail, errorStatus, obj1, error_1, obj1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -62,12 +62,11 @@ function default_1(req, res) {
                 case 1:
                     _a.sent();
                     id = req.query.id;
-                    Nid = Number(id);
-                    if (!Nid) return [3 /*break*/, 3];
+                    if (!id) return [3 /*break*/, 3];
                     return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE id='".concat(id, "'"))];
                 case 2:
                     dataById = _a.sent();
-                    if (dataById.rowCount > 0)
+                    if (dataById.rowCount == 1)
                         //datasets with id available to display
                         res.send(dataById);
                     else {
@@ -81,7 +80,7 @@ function default_1(req, res) {
                     }
                     return [3 /*break*/, 4];
                 case 3:
-                    detail = "Datasets with Key (id)=(".concat(id, ") does not exist. Cannot retrieve datasets");
+                    detail = "Id is undefined. Cannot retrieve datasets";
                     errorStatus = "ERROR";
                     obj1 = {
                         status: "".concat(errorStatus),

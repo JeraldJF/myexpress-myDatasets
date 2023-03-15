@@ -46,7 +46,7 @@ var pg_1 = require("pg");
 function default_1(req, res) {
     var _this = this;
     var connectDb = function () { return __awaiter(_this, void 0, void 0, function () {
-        var pool, id, Nid, a, detail, status, obj1, detail, errorStatus, obj1, status_1, message, objmessage, error_1, obj1;
+        var pool, id, a, detail, status, obj1, detail, errorStatus, obj1, status_1, message, objmessage, error_1, obj1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -62,8 +62,7 @@ function default_1(req, res) {
                 case 1:
                     _a.sent();
                     id = req.query.id;
-                    Nid = Number(id);
-                    if (!Nid) return [3 /*break*/, 3];
+                    if (!id) return [3 /*break*/, 3];
                     return [4 /*yield*/, pool.query("DELETE FROM datasets WHERE id='".concat(id, "';"))];
                 case 2:
                     a = _a.sent();

@@ -9,7 +9,11 @@ const Joi = require("joi");
 
 const querySchema = Joi.object({
   id: Joi.string().required(),
+  data_schema: Joi.object().required(),
   router_config: Joi.object().required(),
+  status: Joi.string().required(),
+  created_by: Joi.string().required(),
+  updated_by: Joi.string().required(),
 });
 
 //for datatype checking using joi schema
@@ -30,16 +34,21 @@ export default function (req: any, res: any) {
 
       await pool.connect();
       var id = req.body.id;
-      var Nid = Number(id);
+      var ds = req.body.data_schema;
       var rc = req.body.router_config;
+      var dataSchema = JSON.stringify(ds);
       var routerConfig = JSON.stringify(rc);
+      var status1: string = req.body.status;
+
+      var createdBy = req.body.created_by;
+      var updatedBy = req.body.updated_by;
       var created = new Date();
       var updated = new Date();
 
-      var createdDate = created.toLocaleString();
-      var updatedDate = updated.toLocaleString();
+      var createdDate = created.toLocaleString("en-GB");
+      var updatedDate = updated.toLocaleString("en-GB");
 
-      if (Nid) {
+      if (!(req.body.id==undefined)) {
         //datasets given to update
 
         if (error) { //wrong datatypes use
@@ -52,7 +61,7 @@ export default function (req: any, res: any) {
             //given id present in datasets to update
 
             await pool.query(
-              `UPDATE datasets SET created_date='${createdDate}',updated_date='${updatedDate}',router_config='${routerConfig}' WHERE id = '${id}';`
+              `UPDATE datasets SET data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`
             );
             var detail: string = `datasets updated in the table successfully`;
             var status: string = "SUCCESS";

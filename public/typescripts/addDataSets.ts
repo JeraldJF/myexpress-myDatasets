@@ -7,7 +7,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 const Joi = require("joi");
 
-
 const querySchema = Joi.object({
   id: Joi.string().required(),
   data_schema: Joi.object().required(),
@@ -48,24 +47,24 @@ export default function (req: any, res: any) {
 
       var cDate = new Date();
       var uDate = new Date();
-      var createdDate = cDate.toLocaleString('en-GB');
-      var updatedDate = uDate.toLocaleString('en-GB');
-
-      
-
+      var createdDate = cDate.toLocaleString("en-GB");
+      var updatedDate = uDate.toLocaleString("en-GB");
 
       await pool.connect();
-      const pk = await pool.query(`SELECT * FROM datasets WHERE '${id}'=id`);
 
-      // console.log(req.body);
-      console.log();
+      var result = await pool.query(`SELECT * FROM datasets WHERE '${id}'=id`);
       
+  
       
-      if (req.body!=undefined) {
-        //datasets provided to post  
-        if (pk.rowCount == 0) {
-          //primary key not voilated
+      if (req.body.id !== undefined) {
+        
+        //datasets provided to post
+        if (result.rowCount == 0) {
+          
           if (error) {
+            console.log("works");
+            
+            //datatype checking
             return res.status(400).json(error.details);
           } else {
             if (status1 == undefined) {
@@ -84,7 +83,6 @@ export default function (req: any, res: any) {
               status: `${Status}`,
               message: `${detail}`,
             };
-
             res.status(200).json(obj1);
           }
         } else {

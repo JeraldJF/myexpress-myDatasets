@@ -22,4 +22,4 @@ app.listen(port, function (error) {
     else
         console.log("port number ".concat(port, " is working"));
 });
-// module.exports=app;
+module.exports = app;

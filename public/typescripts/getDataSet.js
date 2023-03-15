@@ -68,7 +68,7 @@ function default_1(req, res) {
                     gotData = _a.sent();
                     if (gotData.rowCount > 0) {
                         //display datasets
-                        res.send(gotData);
+                        res.send(gotData.rows);
                     }
                     else {
                         detail = "Table is empty";

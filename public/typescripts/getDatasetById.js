@@ -68,7 +68,7 @@ function default_1(req, res) {
                     dataById = _a.sent();
                     if (dataById.rowCount == 1)
                         //datasets with id available to display
-                        res.send(dataById);
+                        res.send(dataById.rows);
                     else {
                         detail = "Key (id)=(".concat(id, ") does not exist.");
                         errorStatus = "ERROR";

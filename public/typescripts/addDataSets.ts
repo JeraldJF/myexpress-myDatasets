@@ -2,22 +2,14 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 import { Pool } from "pg";
+import jsonSchema from "./schema";
 // import pool1 from "./Connection";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-const Joi = require("joi");
 
-const querySchema = Joi.object({
-  id: Joi.string().required(),
-  data_schema: Joi.object().required(),
-  router_config: Joi.object().required(),
-  status: Joi.string().required(),
-  created_by: Joi.string().required(),
-  updated_by: Joi.string().required(),
-});
 
 export default function (req: any, res: any) {
-  const { error } = querySchema.validate(req.body, {
+  const { error } = jsonSchema.validate(req.body, {
     abortEarly: false,
   });
 
@@ -60,22 +52,24 @@ export default function (req: any, res: any) {
         
         //datasets provided to post
         if (result.rowCount == 0) {
-          
+          //no primary key voilation 
           if (error) {
-            console.log("works");
-            
             //datatype checking
-            return res.status(400).json(error.details);
+            // var detail: string = error.details[0].message;
+            var detail: string = "datatypes of datasets are incorrect";
+            var Status: string = "ERROR";
+            const obj1: { status: string; message: string } = {
+              status: `${Status}`,
+              message: `${detail}`,
+            };
+            
+            return res.status(400).json(obj1);
           } else {
-            if (status1 == undefined) {
-              await pool.query(
-                `INSERT INTO datasets(id, data_schema, router_config, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${createdBy}', '${updatedBy}', '${createdDate}', '${updatedDate}');`
-              );
-            } else {
+            
               await pool.query(
                 `INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}', '${updatedDate}');`
               );
-            }
+            
 
             var detail: string = `datasets inserted in the table successfully`;
             var Status: string = "SUCCESS";

@@ -4,21 +4,11 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 import { Pool } from "pg";
-const Joi = require("joi");
-
-
-const querySchema = Joi.object({
-  id: Joi.string().required(),
-  data_schema: Joi.object().required(),
-  router_config: Joi.object().required(),
-  status: Joi.string().required(),
-  created_by: Joi.string().required(),
-  updated_by: Joi.string().required(),
-});
+import jsonSchema from "./schema";
 
 //for datatype checking using joi schema
 export default function (req: any, res: any) {
-  const { error } = querySchema.validate(req.body, {
+  const { error } = jsonSchema.validate(req.body, {
     abortEarly: false,
   });
 
@@ -52,7 +42,15 @@ export default function (req: any, res: any) {
         //datasets given to update
 
         if (error) { //wrong datatypes use
-          return res.status(400).json(error.details);
+          // var detail: string = error.details[0].message;
+          var detail: string = "datatypes of datasets are incorrect";
+            var Status: string = "ERROR";
+            const obj1: { status: string; message: string } = {
+              status: `${Status}`,
+              message: `${detail}`,
+            };
+            
+            return res.status(400).json(obj1);
         } else {
           const pkeyvoilate = await pool.query(
             `SELECT * FROM datasets WHERE '${id}'=id`

@@ -42,23 +42,15 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var pg_1 = require("pg");
-var Joi = require("joi");
-var querySchema = Joi.object({
-    id: Joi.string().required(),
-    data_schema: Joi.object().required(),
-    router_config: Joi.object().required(),
-    status: Joi.string().required(),
-    created_by: Joi.string().required(),
-    updated_by: Joi.string().required()
-});
+var schema_1 = require("./schema");
 //for datatype checking using joi schema
 function default_1(req, res) {
     var _this = this;
-    var error = querySchema.validate(req.body, {
+    var error = schema_1["default"].validate(req.body, {
         abortEarly: false
     }).error;
     var connectDb = function () { return __awaiter(_this, void 0, void 0, function () {
-        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, created, updated, createdDate, updatedDate, pkeyvoilate, detail, status, obj1, detail, errorStatus, obj1, status_1, message, objmessage, error_1, obj1;
+        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, created, updated, createdDate, updatedDate, detail, Status, obj1, pkeyvoilate, detail, status, obj1, detail, errorStatus, obj1, status_1, message, objmessage, error_1, obj1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -87,7 +79,13 @@ function default_1(req, res) {
                     updatedDate = updated.toLocaleString("en-GB");
                     if (!!(req.body.id == undefined)) return [3 /*break*/, 7];
                     if (!error) return [3 /*break*/, 2];
-                    return [2 /*return*/, res.status(400).json(error.details)];
+                    detail = "datatypes of datasets are incorrect";
+                    Status = "ERROR";
+                    obj1 = {
+                        status: "".concat(Status),
+                        message: "".concat(detail)
+                    };
+                    return [2 /*return*/, res.status(400).json(obj1)];
                 case 2: return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
                 case 3:
                     pkeyvoilate = _a.sent();

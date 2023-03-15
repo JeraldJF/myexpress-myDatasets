@@ -27,7 +27,7 @@ export default function (req: any, res: any) {
       const gotData = await pool.query("SELECT * FROM datasets");
       if (gotData.rowCount > 0) {
         //display datasets
-        res.send(gotData);
+        res.send(gotData.rows);
       } else {
         //No data in table to display
         var detail: string = `Table is empty`;

@@ -32,7 +32,7 @@ export default function (req: Request, res: Response) {
 
         if (dataById.rowCount == 1)
           //datasets with id available to display
-          res.send(dataById);
+          res.send(dataById.rows);
         else {
           //datasets with id not available to display from the database
           var detail: string = `Key (id)=(${id}) does not exist.`;

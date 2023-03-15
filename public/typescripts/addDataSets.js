@@ -40,29 +40,21 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var pg_1 = require("pg");
+var schema_1 = require("./schema");
 // import pool1 from "./Connection";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-var Joi = require("joi");
-var querySchema = Joi.object({
-    id: Joi.string().required(),
-    data_schema: Joi.object().required(),
-    router_config: Joi.object().required(),
-    status: Joi.string().required(),
-    created_by: Joi.string().required(),
-    updated_by: Joi.string().required()
-});
 function default_1(req, res) {
     var _this = this;
-    var error = querySchema.validate(req.body, {
+    var error = schema_1["default"].validate(req.body, {
         abortEarly: false
     }).error;
     var connectDb = function () { return __awaiter(_this, void 0, void 0, function () {
-        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, cDate, uDate, createdDate, updatedDate, result, detail, Status, obj1, detail, errorStatus, obj1, detail, errorStatus, obj1, error_1, obj1;
+        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, cDate, uDate, createdDate, updatedDate, result, detail, Status, obj1, detail, Status, obj1, detail, errorStatus, obj1, detail, errorStatus, obj1, error_1, obj1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 14, , 15]);
+                    _a.trys.push([0, 11, , 12]);
                     pool = new pg_1.Pool({
                         user: "user1",
                         host: "localhost",
@@ -88,23 +80,19 @@ function default_1(req, res) {
                     return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
                 case 2:
                     result = _a.sent();
-                    if (!(req.body.id !== undefined)) return [3 /*break*/, 11];
-                    if (!(result.rowCount == 0)) return [3 /*break*/, 9];
+                    if (!(req.body.id !== undefined)) return [3 /*break*/, 8];
+                    if (!(result.rowCount == 0)) return [3 /*break*/, 6];
                     if (!error) return [3 /*break*/, 3];
-                    console.log("works");
-                    //datatype checking
-                    return [2 /*return*/, res.status(400).json(error.details)];
-                case 3:
-                    if (!(status1 == undefined)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, pool.query("INSERT INTO datasets(id, data_schema, router_config, created_by, updated_by, created_date, updated_date) VALUES('".concat(id, "', '").concat(dataSchema, "', '").concat(routerConfig, "', '").concat(createdBy, "', '").concat(updatedBy, "', '").concat(createdDate, "', '").concat(updatedDate, "');"))];
+                    detail = "datatypes of datasets are incorrect";
+                    Status = "ERROR";
+                    obj1 = {
+                        status: "".concat(Status),
+                        message: "".concat(detail)
+                    };
+                    return [2 /*return*/, res.status(400).json(obj1)];
+                case 3: return [4 /*yield*/, pool.query("INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('".concat(id, "', '").concat(dataSchema, "', '").concat(routerConfig, "', '").concat(status1, "', '").concat(createdBy, "', '").concat(updatedBy, "', '").concat(createdDate, "', '").concat(updatedDate, "');"))];
                 case 4:
                     _a.sent();
-                    return [3 /*break*/, 7];
-                case 5: return [4 /*yield*/, pool.query("INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('".concat(id, "', '").concat(dataSchema, "', '").concat(routerConfig, "', '").concat(status1, "', '").concat(createdBy, "', '").concat(updatedBy, "', '").concat(createdDate, "', '").concat(updatedDate, "');"))];
-                case 6:
-                    _a.sent();
-                    _a.label = 7;
-                case 7:
                     detail = "datasets inserted in the table successfully";
                     Status = "SUCCESS";
                     obj1 = {
@@ -112,9 +100,9 @@ function default_1(req, res) {
                         message: "".concat(detail)
                     };
                     res.status(200).json(obj1);
-                    _a.label = 8;
-                case 8: return [3 /*break*/, 10];
-                case 9:
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
                     detail = "Datasets with Key (id)=(".concat(id, ") already exists");
                     errorStatus = "ERROR";
                     obj1 = {
@@ -122,9 +110,9 @@ function default_1(req, res) {
                         message: "".concat(detail)
                     };
                     res.status(400).json(obj1);
-                    _a.label = 10;
-                case 10: return [3 /*break*/, 12];
-                case 11:
+                    _a.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
                     detail = "No Datasets given to add";
                     errorStatus = "ERROR";
                     obj1 = {
@@ -132,20 +120,20 @@ function default_1(req, res) {
                         message: "".concat(detail)
                     };
                     res.status(400).json(obj1);
-                    _a.label = 12;
-                case 12: return [4 /*yield*/, pool.end()];
-                case 13:
+                    _a.label = 9;
+                case 9: return [4 /*yield*/, pool.end()];
+                case 10:
                     _a.sent();
                     return [2 /*return*/, true];
-                case 14:
+                case 11:
                     error_1 = _a.sent();
                     obj1 = {
                         status: "ERROR",
                         message: "Cannot add datasets"
                     };
                     res.status(500).json(obj1);
-                    return [3 /*break*/, 15];
-                case 15: return [2 /*return*/];
+                    return [3 /*break*/, 12];
+                case 12: return [2 /*return*/];
             }
         });
     }); };

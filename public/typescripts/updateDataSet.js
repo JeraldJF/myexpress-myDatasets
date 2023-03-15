@@ -43,11 +43,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var pg_1 = require("pg");
 var Joi = require("joi");
-// import pool2 from "./Connection";
 var querySchema = Joi.object({
     id: Joi.string().required(),
     router_config: Joi.object().required()
 });
+//for datatype checking using joi schema
 function default_1(req, res) {
     var _this = this;
     var error = querySchema.validate(req.body, {

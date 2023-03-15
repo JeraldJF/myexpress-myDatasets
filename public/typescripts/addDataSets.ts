@@ -59,11 +59,11 @@ export default function (req: any, res: any) {
       const Nid = Number(id);
 
       if (Nid) {
-        //datasets provided to post
+        //datasets provided to post  
         if (pk.rowCount == 0) {
           //primary key not voilated
           if (error) {
-            return res.send("Invalid Request: " + JSON.stringify(error));
+            return res.status(400).json(error.details);
           } else {
             if (status1 == undefined) {
               await pool.query(

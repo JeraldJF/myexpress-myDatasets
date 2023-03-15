@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node dataSets.js",
+    "start": "nodemon ./public/typescripts/dataSets.ts",
     "build": "tsc",
     "test":"mocha --timeout 10000"
   },

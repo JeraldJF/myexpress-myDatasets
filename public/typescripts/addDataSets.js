@@ -92,7 +92,7 @@ function default_1(req, res) {
                     if (!Nid) return [3 /*break*/, 11];
                     if (!(pk.rowCount == 0)) return [3 /*break*/, 9];
                     if (!error) return [3 /*break*/, 3];
-                    return [2 /*return*/, res.send("Invalid Request: " + JSON.stringify(error))];
+                    return [2 /*return*/, res.status(400).json(error.details)];
                 case 3:
                     if (!(status1 == undefined)) return [3 /*break*/, 5];
                     return [4 /*yield*/, pool.query("INSERT INTO datasets(id, data_schema, router_config, created_by, updated_by, created_date, updated_date) VALUES('".concat(id, "', '").concat(dataSchema, "', '").concat(routerConfig, "', '").concat(createdBy, "', '").concat(updatedBy, "', '").concat(createdDate, "', '").concat(updatedDate, "');"))];

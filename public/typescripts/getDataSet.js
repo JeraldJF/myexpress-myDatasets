@@ -37,6 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var pg_1 = require("pg");
+// import {pool1} from "./Connection";
+var queries_1 = require("./queries");
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
@@ -53,22 +55,21 @@ function default_1(req, res) {
                     _a.trys.push([0, 4, , 5]);
                     pool = new pg_1.Pool({
                         user: "user1",
-                        host: "localhost",
+                        host: "host.docker.internal",
                         database: "datasets",
                         password: "JER@ALD",
                         port: 5432
                     });
-                    // console.log(pool);
                     return [4 /*yield*/, pool.connect()];
                 case 1:
-                    // console.log(pool);
                     _a.sent();
-                    return [4 /*yield*/, pool.query("SELECT * FROM datasets")];
+                    return [4 /*yield*/, pool.query(queries_1.select)];
                 case 2:
                     gotData = _a.sent();
                     if (gotData.rowCount > 0) {
                         //display datasets
                         res.send(gotData.rows);
+                        // pool.end();
                     }
                     else {
                         detail = "Table is empty";
@@ -78,6 +79,7 @@ function default_1(req, res) {
                             message: "".concat(detail)
                         };
                         res.status(400).json(obj1);
+                        // pool.end();
                     }
                     return [4 /*yield*/, pool.end()];
                 case 3:
@@ -89,7 +91,7 @@ function default_1(req, res) {
                         status: "ERROR",
                         message: "Cannot Display Datasets"
                     };
-                    res.status(500).json(obj1);
+                    res.status(500).json(error_1);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }

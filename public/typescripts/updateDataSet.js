@@ -43,6 +43,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var pg_1 = require("pg");
 var schema_1 = require("./schema");
+var errors_1 = require("./errors");
+var dates_1 = require("./dates");
+var queries_1 = require("./queries");
 //for datatype checking using joi schema
 function default_1(req, res) {
     var _this = this;
@@ -50,14 +53,14 @@ function default_1(req, res) {
         abortEarly: false
     }).error;
     var connectDb = function () { return __awaiter(_this, void 0, void 0, function () {
-        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, created, updated, createdDate, updatedDate, detail, Status, obj1, pkeyvoilate, detail, status, obj1, detail, errorStatus, obj1, status_1, message, objmessage, error_1, obj1;
+        var pool, id, ds, rc, dataSchema, routerConfig, status1, createdBy, updatedBy, pkeyvoilate, detail, status, obj1, detail, errorStatus, obj1, error_1, obj1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 10, , 11]);
                     pool = new pg_1.Pool({
                         user: "user1",
-                        host: "localhost",
+                        host: "host.docker.internal",
                         database: "datasets",
                         password: "JER@ALD",
                         port: 5432
@@ -65,7 +68,7 @@ function default_1(req, res) {
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     _a.sent();
-                    id = req.body.id;
+                    id = req.params['id'];
                     ds = req.body.data_schema;
                     rc = req.body.router_config;
                     dataSchema = JSON.stringify(ds);
@@ -73,25 +76,27 @@ function default_1(req, res) {
                     status1 = req.body.status;
                     createdBy = req.body.created_by;
                     updatedBy = req.body.updated_by;
-                    created = new Date();
-                    updated = new Date();
-                    createdDate = created.toLocaleString("en-GB");
-                    updatedDate = updated.toLocaleString("en-GB");
-                    if (!!(req.body.id == undefined)) return [3 /*break*/, 7];
+                    // var created = new Date();
+                    // var updated = new Date();
+                    // var createdDate = created.toLocaleString("en-GB");
+                    // var updatedDate = updated.toLocaleString("en-GB");
+                    console.log(id);
+                    if (!!(req.params === null)) return [3 /*break*/, 7];
                     if (!error) return [3 /*break*/, 2];
-                    detail = "datatypes of datasets are incorrect";
-                    Status = "ERROR";
-                    obj1 = {
-                        status: "".concat(Status),
-                        message: "".concat(detail)
-                    };
-                    return [2 /*return*/, res.status(400).json(obj1)];
-                case 2: return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
+                    // var detail: string = error.details[0].message;
+                    // var detail: string = "datatypes of datasets are incorrect";
+                    //   var Status: string = "ERROR";
+                    //   const obj1: { status: string; message: string } = {
+                    //     status: `${Status}`,
+                    //     message: `${detail}`,
+                    //   };
+                    return [2 /*return*/, res.status(400).json(errors_1.datatypes_error)];
+                case 2: return [4 /*yield*/, pool.query(queries_1.selectid + "'".concat(id, "'=id"))];
                 case 3:
                     pkeyvoilate = _a.sent();
                     if (!(pkeyvoilate.rowCount == 1)) return [3 /*break*/, 5];
                     //given id present in datasets to update
-                    return [4 /*yield*/, pool.query("UPDATE datasets SET data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(createdDate, "',updated_date='").concat(updatedDate, "' WHERE id = '").concat(id, "';"))];
+                    return [4 /*yield*/, pool.query(queries_1.update + "data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(dates_1.createdDate, "',updated_date='").concat(dates_1.updatedDate, "' WHERE id = '").concat(id, "';"))];
                 case 4:
                     //given id present in datasets to update
                     _a.sent();
@@ -104,7 +109,7 @@ function default_1(req, res) {
                     res.status(200).json(obj1);
                     return [3 /*break*/, 6];
                 case 5:
-                    detail = "Datasets with Key (id)=(".concat(id, ") does not exist. Cannot Update");
+                    detail = "Datasets with Key (id)=(".concat(id, ") does not exist.");
                     errorStatus = "ERROR";
                     obj1 = {
                         status: "".concat(errorStatus),
@@ -114,13 +119,8 @@ function default_1(req, res) {
                     _a.label = 6;
                 case 6: return [3 /*break*/, 8];
                 case 7:
-                    status_1 = "Error";
-                    message = "No Datasets given to Update";
-                    objmessage = {
-                        status: "".concat(status_1),
-                        message: "".concat(message)
-                    };
-                    res.status(400).json(objmessage);
+                    //no datasets given
+                    res.status(400).json(errors_1.nodatasets);
                     _a.label = 8;
                 case 8: return [4 /*yield*/, pool.end()];
                 case 9:

@@ -1,4 +1,6 @@
 import { Pool } from "pg";
+// import {pool1} from "./Connection";
+import { select } from "./queries";
 
 const express = require("express");
 const app = express();
@@ -10,24 +12,24 @@ app.use(express.json());
 
 export default function (req: any, res: any) {
   const connectDb = async () => {
+    // var pool = pool1;
+    // console.log(pool);
+    // pool.connect();
     try {
-      const pool = new Pool({
+      var pool= new Pool({
         user: "user1",
-        host: "localhost",
+        host: "host.docker.internal",
         database: "datasets",
         password: "JER@ALD",
         port: 5432,
       });
-      // console.log(pool);
-      
-      
-
       await pool.connect();
 
-      const gotData = await pool.query("SELECT * FROM datasets");
+      const gotData = await pool.query(select);
       if (gotData.rowCount > 0) {
         //display datasets
         res.send(gotData.rows);
+        // pool.end();
       } else {
         //No data in table to display
         var detail: string = `Table is empty`;
@@ -37,17 +39,21 @@ export default function (req: any, res: any) {
           message: `${detail}`,
         };
         res.status(400).json(obj1);
+        // pool.end();
       }
       await pool.end();
       return true;
     } catch (error) {
       // Database error
+      // console.log(error);
       const obj1 = {
         status: "ERROR",
         message: "Cannot Display Datasets",
       };
-      res.status(500).json(obj1);
-
+      res.status(500).json(error);
+      
+      
+      // await pool.end();
       
     }
   };

@@ -8,19 +8,30 @@ import addDataSets from "./addDataSets";
 import getDatasetById from "./getDatasetById";
 import updateDataSet from "./updateDataSet";
 import removeDataSet from "./removeDataSet";
+// import updatepartially from "./partialupdate";
 
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/dataset/get", getDataSet);
+app.get("/datasets/get", getDataSet);
 
-app.get("/dataset/getById", getDatasetById);
+app.get("/datasets/id/:id", getDatasetById);
 
-app.post("/dataset/create", addDataSets); 
+app.post("/datasets/addData", addDataSets); 
 
-app.put("/dataset/updateData", updateDataSet);
+app.put("/datasets/updateData/:id", updateDataSet);
 
-app.delete("/dataset/removeData", removeDataSet);
+// app.patch("/datasets/:id", updatepartially);
+
+app.delete("/datasets/deleteData/:id", removeDataSet);
+
+app.all("*",(req:any,res:any)=>{
+  const route_error: object= {
+    status: `ERROR`,
+    message: `Invalid route`
+  };
+res.status(400).json(route_error);
+})
 
 
 app.listen(port, (error:any) => {

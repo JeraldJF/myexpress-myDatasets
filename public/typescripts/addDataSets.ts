@@ -3,10 +3,14 @@ const app = express();
 const bodyParser = require("body-parser");
 import { Pool } from "pg";
 import jsonSchema from "./schema";
-// import pool1 from "./Connection";
+// import {pool1} from "./Connection";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-
+import { datatypes_error } from "./errors";
+import { inserted } from "./success";
+import { nodatasets } from "./errors";
+import { insertdata, selectid } from "./queries";
+import { createdDate, updatedDate } from "./dates";
 
 export default function (req: any, res: any) {
   const { error } = jsonSchema.validate(req.body, {
@@ -14,19 +18,21 @@ export default function (req: any, res: any) {
   });
 
   const connectDb = async () => {
+    // var pool = pool1;
+    // pool.connect();
     try {
-      const pool = new Pool({
+      var pool = new Pool({
         user: "user1",
-        host: "localhost",
+        host: "host.docker.internal",
         database: "datasets",
         password: "JER@ALD",
         port: 5432,
       });
 
+      // host.docker.internal
       // if(pool.password=="JER@ALD"){ //Checking for password
 
-      // console.log(req.body.dname);
-
+      await pool.connect();
       var id = req.body.id;
       var ds = req.body.data_schema;
       var rc = req.body.router_config;
@@ -37,48 +43,33 @@ export default function (req: any, res: any) {
       var createdBy = req.body.created_by;
       var updatedBy = req.body.updated_by;
 
-      var cDate = new Date();
-      var uDate = new Date();
-      var createdDate = cDate.toLocaleString("en-GB");
-      var updatedDate = uDate.toLocaleString("en-GB");
 
-      await pool.connect();
+      var result = await pool.query(selectid + `'${id}'=id;`);
 
-      var result = await pool.query(`SELECT * FROM datasets WHERE '${id}'=id`);
 
-      
-  
-      
-      if (id !== undefined) {
-        
+
+
+      if (!(Object.keys(req.body).length === 0)) {
+        console.log("works");
         //datasets provided to post
         if (result.rowCount == 0) {
-          //no primary key voilation 
+          console.log("works");
+          //no primary key voilation
           if (error) {
+            console.log("works");
             //datatype checking
-            // var detail: string = error.details[0].message;
-            var detail: string = "datatypes of datasets are incorrect";
-            var Status: string = "ERROR";
-            const obj1: { status: string; message: string } = {
-              status: `${Status}`,
-              message: `${detail}`,
-            };
-            
-            return res.status(400).json(obj1);
-          } else {
-            
-              await pool.query(
-                `INSERT INTO datasets(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}', '${updatedDate}');`
-              );
-            
 
-            var detail: string = `datasets inserted in the table successfully`;
-            var Status: string = "SUCCESS";
-            const obj1: { status: string; message: string } = {
-              status: `${Status}`,
-              message: `${detail}`,
-            };
-            res.status(200).json(obj1);
+            res.status(400).json(datatypes_error);
+            // pool.end();
+          } else {
+            console.log("worksto");
+            await pool.query(
+              insertdata +
+                `(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}', '${updatedDate}');`
+            );
+            console.log("worksfina");
+            res.status(200).json(inserted);
+            // pool.end();
           }
         } else {
           //primary key voilation
@@ -91,18 +82,13 @@ export default function (req: any, res: any) {
           };
 
           res.status(400).json(obj1);
+          // pool.end();
         }
       } else {
         // datasets not provided to post
-        var detail: string = `No Datasets given to add`;
-        var errorStatus: string = "ERROR";
-        const obj1: { status: string; message: string } = {
-          status: `${errorStatus}`,
-          message: `${detail}`,
-        };
-        res.status(400).json(obj1);
+        res.status(400).json(nodatasets);
+        // pool.end();
       }
-
       await pool.end();
       return true;
     } catch (error: any) {
@@ -112,8 +98,7 @@ export default function (req: any, res: any) {
         message: "Cannot add datasets",
       };
       res.status(500).json(obj1);
-
-      
+      // console.log(error);
     }
   };
   connectDb();

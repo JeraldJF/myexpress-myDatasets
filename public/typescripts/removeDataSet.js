@@ -42,6 +42,7 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 var pg_1 = require("pg");
+var queries_1 = require("./queries");
 // import pool1 from "./Connection";
 function default_1(req, res) {
     var _this = this;
@@ -53,7 +54,7 @@ function default_1(req, res) {
                     _a.trys.push([0, 6, , 7]);
                     pool = new pg_1.Pool({
                         user: "user1",
-                        host: "localhost",
+                        host: "host.docker.internal",
                         database: "datasets",
                         password: "JER@ALD",
                         port: 5432
@@ -61,9 +62,9 @@ function default_1(req, res) {
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     _a.sent();
-                    id = req.query.id;
+                    id = req.params['id'];
                     if (!id) return [3 /*break*/, 3];
-                    return [4 /*yield*/, pool.query("DELETE FROM datasets WHERE id='".concat(id, "';"))];
+                    return [4 /*yield*/, pool.query(queries_1.deleteid + "'".concat(id, "';"))];
                 case 2:
                     a = _a.sent();
                     if (a.rowCount == 1) {

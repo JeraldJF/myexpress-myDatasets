@@ -20,7 +20,7 @@ export default function (req: any, res: any) {
     try {
       const pool = new Pool({
         user: "user1",
-        host: "host.docker.internal",
+        host: "localhost",
         database: "datasets",
         password: "JER@ALD",
         port: 5432,

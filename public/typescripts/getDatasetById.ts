@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Pool } from "pg";
+import { selectid } from "./queries";
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -14,7 +15,7 @@ export default function (req: Request, res: Response) {
     try {
       const pool = new Pool({
         user: "user1",
-        host: "localhost",
+        host: "host.docker.internal",
         database: "datasets",
         password: "JER@ALD",
         port: 5432,
@@ -22,12 +23,12 @@ export default function (req: Request, res: Response) {
 
       await pool.connect();
 
-      var id = req.query.id;
+      var id = req.params['id'];
 
       if (id) {
         //User provided id to retreive datasets
         const dataById = await pool.query(
-          `SELECT * FROM datasets WHERE id='${id}'`
+          selectid+`id='${id}';`
         );
 
         if (dataById.rowCount == 1)

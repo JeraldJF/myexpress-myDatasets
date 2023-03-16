@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 import { Pool } from "pg";
+import { deleteid } from "./queries";
 // import pool1 from "./Connection";
 
 export default function (req: any, res: any) {
@@ -11,18 +12,18 @@ export default function (req: any, res: any) {
     try {
       const pool = new Pool({
         user: "user1",
-        host: "localhost",
+        host: "host.docker.internal",
         database: "datasets",
         password: "JER@ALD",
         port: 5432,
       });
 
       await pool.connect();
-      var id = req.query.id;
+      var id = req.params['id'];
 
       if (id) {
         //id given to delete
-        const a = await pool.query(`DELETE FROM datasets WHERE id='${id}';`);
+        const a = await pool.query(deleteid+`'${id}';`);
         if (a.rowCount == 1) {
           //valid id to delete
 

@@ -45,10 +45,11 @@ export default function (req: any, res: any) {
       await pool.connect();
 
       var result = await pool.query(`SELECT * FROM datasets WHERE '${id}'=id`);
+
       
   
       
-      if (req.body.id !== undefined) {
+      if (id !== undefined) {
         
         //datasets provided to post
         if (result.rowCount == 0) {

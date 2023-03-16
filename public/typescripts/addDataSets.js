@@ -80,7 +80,8 @@ function default_1(req, res) {
                     return [4 /*yield*/, pool.query("SELECT * FROM datasets WHERE '".concat(id, "'=id"))];
                 case 2:
                     result = _a.sent();
-                    if (!(req.body.id !== undefined)) return [3 /*break*/, 8];
+                    console.log(id);
+                    if (!(id !== undefined)) return [3 /*break*/, 8];
                     if (!(result.rowCount == 0)) return [3 /*break*/, 6];
                     if (!error) return [3 /*break*/, 3];
                     detail = "datatypes of datasets are incorrect";

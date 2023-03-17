@@ -55,7 +55,7 @@ function default_1(req, res) {
                     _a.trys.push([0, 4, , 5]);
                     pool = new pg_1.Pool({
                         user: "user1",
-                        host: "host.docker.internal",
+                        host: "localhost",
                         database: "datasets",
                         password: "JER@ALD",
                         port: 5432
@@ -87,6 +87,8 @@ function default_1(req, res) {
                     return [2 /*return*/, true];
                 case 4:
                     error_1 = _a.sent();
+                    // Database error
+                    console.log(error_1);
                     obj1 = {
                         status: "ERROR",
                         message: "Cannot Display Datasets"

@@ -18,7 +18,7 @@ export default function (req: any, res: any) {
     try {
       var pool= new Pool({
         user: "user1",
-        host: "host.docker.internal",
+        host: "localhost",
         database: "datasets",
         password: "JER@ALD",
         port: 5432,
@@ -45,7 +45,7 @@ export default function (req: any, res: any) {
       return true;
     } catch (error) {
       // Database error
-      // console.log(error);
+      console.log(error)
       const obj1 = {
         status: "ERROR",
         message: "Cannot Display Datasets",

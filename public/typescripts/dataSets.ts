@@ -8,9 +8,9 @@ import addDataSets from "./addDataSets";
 import getDatasetById from "./getDatasetById";
 import updateDataSet from "./updateDataSet";
 import removeDataSet from "./removeDataSet";
-// import updatepartially from "./partialupdate";
+import updatepartially from "./partialupdate";
 
-// app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.json());
 
 app.get("/datasets/get", getDataSet);
@@ -21,7 +21,7 @@ app.post("/datasets/addData", addDataSets);
 
 app.put("/datasets/updateData/:id", updateDataSet);
 
-// app.patch("/datasets/:id", updatepartially);
+app.patch("/datasets/updateStatus/:id", updatepartially);
 
 app.delete("/datasets/deleteData/:id", removeDataSet);
 

@@ -7,7 +7,7 @@ import { Pool } from "pg";
 import jsonSchema from "./schema";
 import { nodatasets,datatypes_error } from "./errors";
 import { createdDate,updatedDate } from "./dates";
-import { update,selectid } from "./queries";
+import { update,selectid} from "./queries";
 
 //for datatype checking using joi schema
 
@@ -25,27 +25,23 @@ export default function (req: any, res: any) {
         password: "JER@ALD",
         port: 5432,
       });
+      ;
+      
 
       await pool.connect();
+      
+      // console.log(data);
       var id = req.params['id'];
-      var ds = req.body.data_schema;
-      var rc = req.body.router_config;
-      var dataSchema = JSON.stringify(ds);
-      var routerConfig = JSON.stringify(rc);
-      var status1: string = req.body.status;
+      const data = await pool.query(
+        selectid+`'${id}'=id`
+      );
 
-      var createdBy = req.body.created_by;
-      var updatedBy = req.body.updated_by;
-      // var created = new Date();
-      // var updated = new Date();
+      
+      
 
-      // var createdDate = created.toLocaleString("en-GB");
-      // var updatedDate = updated.toLocaleString("en-GB");
-console.log(id);
+      
 
-      if (!(req.params===null)) {
-        //datasets given to update
-
+        
         if (error) { //wrong datatypes use
           // var detail: string = error.details[0].message;
           // var detail: string = "datatypes of datasets are incorrect";
@@ -62,7 +58,14 @@ console.log(id);
           );
           if (pkeyvoilate.rowCount == 1) {
             //given id present in datasets to update
+            var ds = req.body.data_schema||data.rows[0].data_schema;
+      var rc = req.body.router_config||data.rows[0].router_config;
+      var dataSchema = JSON.stringify(ds);
+      var routerConfig = JSON.stringify(rc);
+      var status1: string = req.body.status||data.rows[0].status;
 
+      var createdBy = req.body.created_by||data.rows[0].created_by;
+      var updatedBy = req.body.updated_by||data.rows[0].updated_by;
             await pool.query(
               update+`data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`
             );
@@ -85,23 +88,25 @@ console.log(id);
             res.status(400).json(obj1);
           }
         }
-      } else {
-        //no datasets given
+      // } else {
+      //   //no datasets given
 
-        res.status(400).json(nodatasets);
-        // console.log();
+      //   res.status(400).json(nodatasets);
+      //   // console.log();
         
-      }
+      // }
 
       await pool.end();
       return true;
     } catch (error) {
       // Database error
-      const obj1 = {
-        status: "ERROR",
-        message: "Cannot update datasets",
-      };
-      res.status(500).json(obj1);
+      // const obj1 = {
+      //   status: "ERROR",
+      //   message: "Cannot update datasets",
+      // };
+      // res.status(500).json(obj1);
+      console.log(error);
+      
     }
    
   };

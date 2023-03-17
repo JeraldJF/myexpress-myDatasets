@@ -36,36 +36,24 @@ export default function (req: any, res: any) {
 
       var createdBy = req.body.created_by;
       var updatedBy = req.body.updated_by;
-      // var created = new Date();
-      // var updated = new Date();
-
-      // var createdDate = created.toLocaleString("en-GB");
-      // var updatedDate = updated.toLocaleString("en-GB");
-console.log(id);
 
       if (!(req.params===null)) {
         //datasets given to update
 
         if (error) { //wrong datatypes use
-          // var detail: string = error.details[0].message;
-          // var detail: string = "datatypes of datasets are incorrect";
-          //   var Status: string = "ERROR";
-          //   const obj1: { status: string; message: string } = {
-          //     status: `${Status}`,
-          //     message: `${detail}`,
-          //   };
-            
             return res.status(400).json(datatypes_error);
         } else {
-          const pkeyvoilate = await pool.query(
-            selectid+`'${id}'=id`
-          );
-          if (pkeyvoilate.rowCount == 1) {
+          // const pkeyvoilate = await pool.query(
+          //   selectid+`'${id}'=id`
+          // );
+          // if (pkeyvoilate.rowCount == 1) {
             //given id present in datasets to update
 
-            await pool.query(
+            const pkeyvoilate=await pool.query(
               update+`data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`
             );
+            if (pkeyvoilate.rowCount == 1) {
+
             var detail: string = `datasets updated in the table successfully`;
             var status: string = "SUCCESS";
             const obj1 = {

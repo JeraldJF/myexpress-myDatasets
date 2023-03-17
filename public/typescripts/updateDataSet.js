@@ -57,7 +57,7 @@ function default_1(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 10, , 11]);
+                    _a.trys.push([0, 8, , 9]);
                     pool = new pg_1.Pool({
                         user: "user1",
                         host: "host.docker.internal",
@@ -76,65 +76,49 @@ function default_1(req, res) {
                     status1 = req.body.status;
                     createdBy = req.body.created_by;
                     updatedBy = req.body.updated_by;
-                    // var created = new Date();
-                    // var updated = new Date();
-                    // var createdDate = created.toLocaleString("en-GB");
-                    // var updatedDate = updated.toLocaleString("en-GB");
-                    console.log(id);
-                    if (!!(req.params === null)) return [3 /*break*/, 7];
+                    if (!!(req.params === null)) return [3 /*break*/, 5];
                     if (!error) return [3 /*break*/, 2];
-                    // var detail: string = error.details[0].message;
-                    // var detail: string = "datatypes of datasets are incorrect";
-                    //   var Status: string = "ERROR";
-                    //   const obj1: { status: string; message: string } = {
-                    //     status: `${Status}`,
-                    //     message: `${detail}`,
-                    //   };
                     return [2 /*return*/, res.status(400).json(errors_1.datatypes_error)];
-                case 2: return [4 /*yield*/, pool.query(queries_1.selectid + "'".concat(id, "'=id"))];
+                case 2: return [4 /*yield*/, pool.query(queries_1.update + "data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(dates_1.createdDate, "',updated_date='").concat(dates_1.updatedDate, "' WHERE id = '").concat(id, "';"))];
                 case 3:
                     pkeyvoilate = _a.sent();
-                    if (!(pkeyvoilate.rowCount == 1)) return [3 /*break*/, 5];
-                    //given id present in datasets to update
-                    return [4 /*yield*/, pool.query(queries_1.update + "data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(dates_1.createdDate, "',updated_date='").concat(dates_1.updatedDate, "' WHERE id = '").concat(id, "';"))];
-                case 4:
-                    //given id present in datasets to update
-                    _a.sent();
-                    detail = "datasets updated in the table successfully";
-                    status = "SUCCESS";
-                    obj1 = {
-                        status: "".concat(status),
-                        message: "".concat(detail)
-                    };
-                    res.status(200).json(obj1);
-                    return [3 /*break*/, 6];
+                    if (pkeyvoilate.rowCount == 1) {
+                        detail = "datasets updated in the table successfully";
+                        status = "SUCCESS";
+                        obj1 = {
+                            status: "".concat(status),
+                            message: "".concat(detail)
+                        };
+                        res.status(200).json(obj1);
+                    }
+                    else {
+                        detail = "Datasets with Key (id)=(".concat(id, ") does not exist.");
+                        errorStatus = "ERROR";
+                        obj1 = {
+                            status: "".concat(errorStatus),
+                            message: "".concat(detail)
+                        };
+                        res.status(400).json(obj1);
+                    }
+                    _a.label = 4;
+                case 4: return [3 /*break*/, 6];
                 case 5:
-                    detail = "Datasets with Key (id)=(".concat(id, ") does not exist.");
-                    errorStatus = "ERROR";
-                    obj1 = {
-                        status: "".concat(errorStatus),
-                        message: "".concat(detail)
-                    };
-                    res.status(400).json(obj1);
-                    _a.label = 6;
-                case 6: return [3 /*break*/, 8];
-                case 7:
                     //no datasets given
                     res.status(400).json(errors_1.nodatasets);
-                    _a.label = 8;
-                case 8: return [4 /*yield*/, pool.end()];
-                case 9:
+                    _a.label = 6;
+                case 6: return [4 /*yield*/, pool.end()];
+                case 7:
                     _a.sent();
                     return [2 /*return*/, true];
-                case 10:
+                case 8:
                     error_1 = _a.sent();
                     obj1 = {
                         status: "ERROR",
                         message: "Cannot update datasets"
                     };
                     res.status(500).json(obj1);
-                    return [3 /*break*/, 11];
-                case 11: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     }); };

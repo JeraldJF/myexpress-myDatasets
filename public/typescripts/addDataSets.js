@@ -67,12 +67,8 @@ function default_1(req, res) {
                         password: "JER@ALD",
                         port: 5432
                     });
-                    // host.docker.internal
-                    // if(pool.password=="JER@ALD"){ //Checking for password
                     return [4 /*yield*/, pool.connect()];
                 case 1:
-                    // host.docker.internal
-                    // if(pool.password=="JER@ALD"){ //Checking for password
                     _a.sent();
                     id = req.body.id;
                     ds = req.body.data_schema;

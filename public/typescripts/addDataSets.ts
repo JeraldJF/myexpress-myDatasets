@@ -18,8 +18,6 @@ export default function (req: any, res: any) {
   });
 
   const connectDb = async () => {
-    // var pool = pool1;
-    // pool.connect();
     try {
       var pool = new Pool({
         user: "user1",
@@ -28,10 +26,6 @@ export default function (req: any, res: any) {
         password: "JER@ALD",
         port: 5432,
       });
-
-      // host.docker.internal
-      // if(pool.password=="JER@ALD"){ //Checking for password
-
       await pool.connect();
       var id = req.body.id;
       var ds = req.body.data_schema;

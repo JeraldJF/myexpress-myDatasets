@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var Joi = require("joi");
 var jsonSchema = Joi.object({
-    id: Joi.string().required(),
+    id: Joi.string(),
     data_schema: Joi.object(),
     router_config: Joi.object(),
     status: Joi.string(),

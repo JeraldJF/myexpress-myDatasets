@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var request = require("supertest");
-var app = require("./public/typescripts/dataSets");
+var app = require("../public/typescripts/dataSets");
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var should = chai.should();

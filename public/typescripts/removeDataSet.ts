@@ -4,8 +4,8 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 // import { Pool } from "pg";
-import { deleteid } from "./queries";
-import pool from "./Connection";
+import { deleteid } from "../../Config/queries";
+import pool from "../../Config/Connection";
 
 
 

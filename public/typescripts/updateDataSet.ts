@@ -4,11 +4,11 @@ const app = express();
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // import { Pool } from "pg";
-import pool from "./Connection";
-import jsonSchema from "./schema";
-import { nodatasets, datatypes_error } from "./errors";
-import { createdDate, updatedDate } from "./dates";
-import { update, selectid } from "./queries";
+import pool from "../../Config/Connection";
+import jsonSchema from "../../Config/schema";
+import { nodatasets, datatypes_error } from "../../Helpers/errors";
+import { createdDate, updatedDate } from "../../Config/dates";
+import { update, selectid } from "../../Config/queries";
 
 const connectDb = (req: any, res: any) => {
   const { error } = jsonSchema.validate(req.body, {

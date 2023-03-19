@@ -6,11 +6,11 @@ var app = express();
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // import { Pool } from "pg";
-var Connection_1 = require("./Connection");
-var schema_1 = require("./schema");
-var errors_1 = require("./errors");
-var dates_1 = require("./dates");
-var queries_1 = require("./queries");
+var Connection_1 = require("../../Config/Connection");
+var schema_1 = require("../../Config/schema");
+var errors_1 = require("../../Helpers/errors");
+var dates_1 = require("../../Config/dates");
+var queries_1 = require("../../Config/queries");
 var connectDb = function (req, res) {
     var error = schema_1["default"].validate(req.body, {
         //for datatype checking using joi schema

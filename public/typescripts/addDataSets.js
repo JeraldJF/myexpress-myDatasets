@@ -4,15 +4,15 @@ var express = require("express");
 var app = express();
 // const bodyParser = require("body-parser");
 // import { Pool } from "pg";
-var schema_1 = require("./schema");
-var Connection_1 = require("./Connection");
+var schema_1 = require("../../Config/schema");
+var Connection_1 = require("../../Config/Connection");
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-var errors_1 = require("./errors");
-var success_1 = require("./success");
-var errors_2 = require("./errors");
-var queries_1 = require("./queries");
-var dates_1 = require("./dates");
+var errors_1 = require("../../Helpers/errors");
+var success_1 = require("../../Helpers/success");
+var errors_2 = require("../../Helpers/errors");
+var queries_1 = require("../../Config/queries");
+var dates_1 = require("../../Config/dates");
 var connectDb = function (req, res) {
     var err = schema_1["default"].validate(req.body, {
         abortEarly: false

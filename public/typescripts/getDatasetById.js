@@ -1,11 +1,11 @@
 "use strict";
 exports.__esModule = true;
 // import { Pool } from "pg";
-var queries_1 = require("./queries");
+var queries_1 = require("../../Config/queries");
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
-var Connection_1 = require("./Connection");
+var Connection_1 = require("../../Config/Connection");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var connectDb = function (req, res) {

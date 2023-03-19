@@ -6,8 +6,8 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 // import { Pool } from "pg";
-var queries_1 = require("./queries");
-var Connection_1 = require("./Connection");
+var queries_1 = require("../../Config/queries");
+var Connection_1 = require("../../Config/Connection");
 var connectDb = function (req, res) {
     var error = {
         status: "ERROR",

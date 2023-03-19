@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
-var Connection_1 = require("./Connection");
-var queries_1 = require("./queries");
+var Connection_1 = require("../../Config/Connection");
+var queries_1 = require("../../Config/queries");
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");

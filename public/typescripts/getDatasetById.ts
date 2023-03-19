@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 // import { Pool } from "pg";
-import { selectid } from "./queries";
+import { selectid } from "../../Config/queries";
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-import pool from "./Connection";
+import pool from "../../Config/Connection";
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());

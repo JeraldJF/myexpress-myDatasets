@@ -14,7 +14,6 @@ var connectDb = function (req, res) {
         message: "Cannot delete datasets"
     };
     try {
-        Connection_1["default"].connect();
         var id = req.params['id'];
         if (id) {
             //id given to delete
@@ -40,7 +39,7 @@ var connectDb = function (req, res) {
                         status: "".concat(errorStatus),
                         message: "".concat(detail)
                     };
-                    res.status(400).json(obj1);
+                    res.status(404).json(obj1);
                 }
             });
         }

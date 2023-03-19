@@ -9,12 +9,18 @@ var Connection_1 = require("../../Config/Connection");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var connectDb = function (req, res) {
+    var dberror = {
+        status: "ERROR",
+        message: "Cannot Display Datasets"
+    };
     try {
-        Connection_1["default"].connect;
         var id = req.params["id"];
         if (id) {
             //User provided id to retreive datasets
             var dataById = Connection_1["default"].query(queries_1.selectid + "id='".concat(id, "';"), function (error, data) {
+                if (error) {
+                    res.status(502).json(dberror);
+                }
                 if (data.rowCount == 1)
                     //datasets with id available to display
                     res.send(data.rows);
@@ -26,7 +32,7 @@ var connectDb = function (req, res) {
                         status: "".concat(errorStatus),
                         message: "".concat(detail)
                     };
-                    res.status(400).json(obj1);
+                    res.status(404).json(obj1);
                 }
             });
         }
@@ -45,12 +51,7 @@ var connectDb = function (req, res) {
     }
     catch (error) {
         // Database error
-        console.log(error);
-        var obj1 = {
-            status: "ERROR",
-            message: "Cannot Display Datasets"
-        };
-        res.status(500).json(obj1);
+        res.status(500).json(dberror);
     }
 };
 exports["default"] = connectDb;

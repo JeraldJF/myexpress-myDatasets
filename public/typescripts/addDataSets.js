@@ -14,15 +14,14 @@ var errors_2 = require("../../Helpers/errors");
 var queries_1 = require("../../Config/queries");
 var dates_1 = require("../../Config/dates");
 var connectDb = function (req, res) {
-    var err = schema_1["default"].validate(req.body, {
+    var error = schema_1["default"].validate(req.body, {
         abortEarly: false
-    }).err;
+    }).error;
     var dberror = {
         status: "ERROR",
         message: "Cannot add datasets"
     };
     try {
-        Connection_1["default"].connect;
         var id = req.body.id;
         var ds = req.body.data_schema;
         var rc = req.body.router_config;
@@ -33,16 +32,15 @@ var connectDb = function (req, res) {
         var updatedBy = req.body.updated_by;
         if (id) {
             //datasets provided to post
-            Connection_1["default"].query(queries_1.selectid + "'".concat(id, "'=id;"), function (error, result) {
-                if (error) {
-                    res.status(500).json(dberror);
+            Connection_1["default"].query(queries_1.selectid + "'".concat(id, "'=id;"), function (err, result) {
+                if (err) {
+                    res.status(502).json(dberror);
                 }
                 else if (result.rowCount == 0) {
                     //no primary key voilation
-                    if (err) {
+                    if (error) {
                         //datatype checking
                         res.status(422).json(errors_1.datatypes_error);
-                        // pool.end();
                     }
                     else {
                         Connection_1["default"].query(queries_1.insertdata +

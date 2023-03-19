@@ -10,8 +10,6 @@ app.use(express.json());
 
 var connectDB = (req: any, res: any) => {
   try {
-    pool.connect;
-
     pool.query(select, (error: any, data: any) => {
       if (data.rowCount > 0) {
         // display datasets
@@ -24,7 +22,7 @@ var connectDB = (req: any, res: any) => {
           status: `${errorStatus}`,
           message: `${detail}`,
         };
-        res.status(400).json(obj1);
+        res.status(404).json(obj1);
       }
     });
     pool.end;

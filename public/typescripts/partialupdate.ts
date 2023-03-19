@@ -11,7 +11,7 @@ import { update, selectid } from "../../Config/queries";
 import pool from "../../Config/Connection";
 
 const connectDb = (req: any, res: any) => {
-  const { err } = jsonSchema.validate(req.body, {
+  const { error } = jsonSchema.validate(req.body, {
     abortEarly: false, //for datatype checking using joi schema
   });
   var dberror = {
@@ -20,12 +20,12 @@ const connectDb = (req: any, res: any) => {
   };
 
   try {
-    pool.connect;
     var id = req.params["id"];
+    
 
-    if (err) {
+    if (error) {
       //wrong datatypes use
-      return res.status(400).json(datatypes_error);
+      res.status(422).json(datatypes_error);
     } else {
       pool.query(selectid + `'${id}'=id`, (error: any, data: any) => {
         if (error) res.status(500).json(dberror);
@@ -42,9 +42,9 @@ const connectDb = (req: any, res: any) => {
           pool.query(
             update +
               `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`,
-            (error: any) => {
-              if (error) {
-                res.status(500).json(dberror);
+            (err: any) => {
+              if (err) {
+                res.status(502).json(dberror);
               } else {
                 //update success
                 var detail: string = `datasets updated in the table successfully`;
@@ -65,14 +65,14 @@ const connectDb = (req: any, res: any) => {
             status: `${errorStatus}`,
             message: `${detail}`,
           };
-          res.status(400).json(obj1);
+          res.status(404).json(obj1);
         }
       });
     }
     pool.end;
   } catch (error) {
     res.status(500).json(dberror);
-    console.log(error);
+
   }
 };
 export default connectDb;

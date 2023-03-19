@@ -1,4 +1,4 @@
-import {Pool}  from "pg";
+const {Pool}=require('pg');
 var pool= new Pool({
     user: "user1",
     host: "localhost",
@@ -6,6 +6,8 @@ var pool= new Pool({
     password: "JER@ALD",
     port: 5432,
   });
+  pool.connect();
+  
 
 export default pool;
   

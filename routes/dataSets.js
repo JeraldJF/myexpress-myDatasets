@@ -21,7 +21,7 @@ app.all("*", function (req, res) {
         status: "ERROR",
         message: "Invalid route"
     };
-    res.status(400).json(route_error);
+    res.status(404).json(route_error);
 });
 app.listen(port, function (error) {
     if (error)

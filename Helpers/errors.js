@@ -3,7 +3,7 @@ exports.__esModule = true;
 exports.nodatasets = exports.datatypes_error = void 0;
 exports.datatypes_error = {
     status: "ERROR",
-    message: "datatypes of datasets are incorrect"
+    message: "datatypes are incorrect"
 };
 exports.nodatasets = {
     status: "Error",

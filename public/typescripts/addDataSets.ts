@@ -13,7 +13,8 @@ import { insertdata, selectid } from "../../Config/queries";
 import { createdDate, updatedDate } from "../../Config/dates";
 
 var connectDb = (req: any, res: any) => {
-  const { err } = jsonSchema.validate(req.body, {
+
+  var { error } = jsonSchema.validate(req.body, {
     abortEarly: false,
   });
   var dberror = {
@@ -21,7 +22,7 @@ var connectDb = (req: any, res: any) => {
     message: "Cannot add datasets",
   };
   try {
-    pool.connect;
+
     var id = req.body.id;
     var ds = req.body.data_schema;
     var rc = req.body.router_config;
@@ -31,19 +32,19 @@ var connectDb = (req: any, res: any) => {
 
     var createdBy = req.body.created_by;
     var updatedBy = req.body.updated_by;
+    
 
     if (id) {
       //datasets provided to post
-      pool.query(selectid + `'${id}'=id;`, (error: any, result: any) => {
-        if (error) {
-          res.status(500).json(dberror);
+      pool.query(selectid + `'${id}'=id;`, (err: any, result: any) => {
+        if (err) {
+          res.status(502).json(dberror);
         } else if (result.rowCount == 0) {
           //no primary key voilation
-          if (err) {
+          if (error) {
             //datatype checking
 
             res.status(422).json(datatypes_error);
-            // pool.end();
           } else {
             pool.query(
               insertdata +

@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var connectDB = function (req, res) {
     try {
-        Connection_1["default"].connect;
         Connection_1["default"].query(queries_1.select, function (error, data) {
             if (data.rowCount > 0) {
                 // display datasets
@@ -23,7 +22,7 @@ var connectDB = function (req, res) {
                     status: "".concat(errorStatus),
                     message: "".concat(detail)
                 };
-                res.status(400).json(obj1);
+                res.status(404).json(obj1);
             }
         });
         Connection_1["default"].end;

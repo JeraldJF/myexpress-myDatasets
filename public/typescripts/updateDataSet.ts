@@ -36,19 +36,14 @@ const connectDb = (req: any, res: any) => {
 
       if (error) {
         //wrong datatypes use
-        return res.status(400).json(datatypes_error);
+        return res.status(422).json(datatypes_error);
       } else {
-        // const pkeyvoilate = await pool.query(
-        //   selectid+`'${id}'=id`
-        // );
-        // if (pkeyvoilate.rowCount == 1) {
-
         pool.query(
           update +
             `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`,
           (error: any, result: any) => {
             if (error) {
-              res.status(500).json(dberror);
+              res.status(502).json(dberror);
             } else if (result.rowCount == 1) {
               //given id present in datasets to update
               var detail: string = `datasets updated in the table successfully`;
@@ -67,7 +62,7 @@ const connectDb = (req: any, res: any) => {
                 status: `${errorStatus}`,
                 message: `${detail}`,
               };
-              res.status(400).json(obj1);
+              res.status(404).json(obj1);
             }
           }
         );
@@ -75,7 +70,7 @@ const connectDb = (req: any, res: any) => {
     } else {
       //no datasets given
 
-      res.status(400).json(nodatasets);
+      res.status(404).json(nodatasets);
     }
     pool.end;
   } catch (error) {

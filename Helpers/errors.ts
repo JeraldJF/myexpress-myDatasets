@@ -1,6 +1,6 @@
 export const datatypes_error: object= {
   status: `ERROR`,
-  message: `datatypes of datasets are incorrect`,
+  message: `datatypes are incorrect`,
 };
 
 export const nodatasets: object = {

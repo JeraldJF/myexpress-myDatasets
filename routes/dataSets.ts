@@ -30,7 +30,7 @@ app.all("*",(req:any,res:any)=>{
     status: `ERROR`,
     message: `Invalid route`
   };
-res.status(400).json(route_error);
+res.status(404).json(route_error);
 })
 
 

@@ -11,9 +11,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 var connectDb = (req: Request, res: Response) => {
+  const dberror= {
+    status: "ERROR",
+    message: "Cannot Display Datasets",
+  };
   try {
-    pool.connect;
-
+  
     var id = req.params["id"];
 
     if (id) {
@@ -21,6 +24,9 @@ var connectDb = (req: Request, res: Response) => {
       const dataById = pool.query(
         selectid + `id='${id}';`,
         (error: any, data: any) => {
+          if(error){
+            res.status(502).json(dberror);
+          }
           if (data.rowCount == 1)
             //datasets with id available to display
             res.send(data.rows);
@@ -32,7 +38,7 @@ var connectDb = (req: Request, res: Response) => {
               status: `${errorStatus}`,
               message: `${detail}`,
             };
-            res.status(400).json(obj1);
+            res.status(404).json(obj1);
           }
         }
       );
@@ -50,12 +56,8 @@ var connectDb = (req: Request, res: Response) => {
     // return true;
   } catch (error) {
     // Database error
-    console.log(error);
-    const obj1 = {
-      status: "ERROR",
-      message: "Cannot Display Datasets",
-    };
-    res.status(500).json(obj1);
+    
+    res.status(500).json(dberror);
   }
 };
 

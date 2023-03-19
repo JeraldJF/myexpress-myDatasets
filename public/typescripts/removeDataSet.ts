@@ -17,8 +17,7 @@ import pool from "../../Config/Connection";
     try {
       
 
-      pool.connect();
-      var id = req.params['id'];
+      var id= req.params['id'];
 
       
       if (id) {
@@ -47,7 +46,7 @@ import pool from "../../Config/Connection";
               status: `${errorStatus}`,
               message: `${detail}`,
             };
-            res.status(400).json(obj1);
+            res.status(404).json(obj1);
           }
         });
 

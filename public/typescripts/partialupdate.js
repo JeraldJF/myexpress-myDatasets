@@ -12,19 +12,18 @@ var dates_1 = require("../../Config/dates");
 var queries_1 = require("../../Config/queries");
 var Connection_1 = require("../../Config/Connection");
 var connectDb = function (req, res) {
-    var err = schema_1["default"].validate(req.body, {
+    var error = schema_1["default"].validate(req.body, {
         abortEarly: false
-    }).err;
+    }).error;
     var dberror = {
         status: "ERROR",
         message: "Cannot add datasets"
     };
     try {
-        Connection_1["default"].connect;
         var id = req.params["id"];
-        if (err) {
+        if (error) {
             //wrong datatypes use
-            return res.status(400).json(errors_1.datatypes_error);
+            res.status(422).json(errors_1.datatypes_error);
         }
         else {
             Connection_1["default"].query(queries_1.selectid + "'".concat(id, "'=id"), function (error, data) {
@@ -40,9 +39,9 @@ var connectDb = function (req, res) {
                     var createdBy = req.body.created_by || data.rows[0].created_by;
                     var updatedBy = req.body.updated_by || data.rows[0].updated_by;
                     Connection_1["default"].query(queries_1.update +
-                        "data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(dates_1.createdDate, "',updated_date='").concat(dates_1.updatedDate, "' WHERE id = '").concat(id, "';"), function (error) {
-                        if (error) {
-                            res.status(500).json(dberror);
+                        "data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(dates_1.createdDate, "',updated_date='").concat(dates_1.updatedDate, "' WHERE id = '").concat(id, "';"), function (err) {
+                        if (err) {
+                            res.status(502).json(dberror);
                         }
                         else {
                             //update success
@@ -64,7 +63,7 @@ var connectDb = function (req, res) {
                         status: "".concat(errorStatus),
                         message: "".concat(detail)
                     };
-                    res.status(400).json(obj1);
+                    res.status(404).json(obj1);
                 }
             });
         }
@@ -72,7 +71,6 @@ var connectDb = function (req, res) {
     }
     catch (error) {
         res.status(500).json(dberror);
-        console.log(error);
     }
 };
 exports["default"] = connectDb;

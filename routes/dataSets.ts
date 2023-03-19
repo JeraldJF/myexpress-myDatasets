@@ -3,12 +3,12 @@ const express=require('express');
 var app = express();
 const port = 3001;
 
-import getDataSet from "./getDataSet";
-import addDataSets from "./addDataSets";
-import getDatasetById from "./getDatasetById";
-import updateDataSet from "./updateDataSet";
-import removeDataSet from "./removeDataSet";
-import updatepartially from "./partialupdate";
+import getDataSet from "../public/typescripts/getDataSet";
+import addDataSets from "../public/typescripts/addDataSets";
+import getDatasetById from "../public/typescripts/getDatasetById";
+import updateDataSet from "../public/typescripts/updateDataSet";
+import removeDataSet from "../public/typescripts/removeDataSet";
+import updatepartially from "../public/typescripts/partialupdate";
 
 
 app.use(express.json());

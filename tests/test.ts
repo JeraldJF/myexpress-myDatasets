@@ -1,5 +1,5 @@
 const request=require("supertest");
-const app=require("./public/typescripts/dataSets");
+const app=require("../routes/dataSets");
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let should = chai.should();

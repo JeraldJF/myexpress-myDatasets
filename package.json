@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./public/typescripts/dataSets.ts",
+    "start": "nodemon ./routes/dataSets.ts",
     "build": "tsc",
     "test": "mocha --timeout 10000",
     "dev": "ts-node-dev -r tsconfig-paths/register src/main.ts"

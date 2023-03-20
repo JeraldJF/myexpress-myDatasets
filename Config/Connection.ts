@@ -1,7 +1,7 @@
 const {Pool}=require('pg');
 var pool= new Pool({
     user: "user1",
-    host: "localhost",
+    host: "host.docker.internal",
     database: "datasets",
     password: "JER@ALD",
     port: 5432,

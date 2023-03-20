@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+
+  name: datasets-deployment
+
+  labels:
+
+    app: datasets
+
+spec:
+
+  replicas: 1
+
+  selector:
+
+    matchLabels:
+
+      app: datasets
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: datasets
+
+    spec:
+
+      containers:
+
+      - name: datasets
+
+        image: jerald23sanketika/express:2.0
+
+        resources:
+
+          limits:
+
+            memory: "128Mi"
+
+            cpu: "500m"
+
+        ports:
+
+        - containerPort: 3001
+---
+
+apiVersion: v1
+
+kind: Service
+
+metadata:
+
+  name: datasets-service
+
+spec:
+
+  type: LoadBalancer
+
+  selector:
+
+    app: datasets
+
+  ports:
+
+    - protocol: TCP
+
+      port: 3001
+
+      targetPort: 3001

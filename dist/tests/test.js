@@ -1,10 +1,10 @@
 "use strict";
-exports.__esModule = true;
-var request = require("supertest");
-var app = require("../routes/dataSets");
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var should = chai.should();
+Object.defineProperty(exports, "__esModule", { value: true });
+const request = require("supertest");
+const app = require("../routes/dataSets");
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let should = chai.should();
 process.env.NODE_ENV = 'test';
 require("mocha");
 var mocha = require('mocha');
@@ -13,11 +13,11 @@ var it = mocha.it;
 // var assert = require('chai').assert
 // API tests
 chai.use(chaiHttp);
-describe('/GET datasets', function () {
-    it('It should display the datasets', function (done) {
+describe('/GET datasets', () => {
+    it('It should display the datasets', (done) => {
         chai.request(app)
             .get('/dataset/get')
-            .end(function (err, res) {
+            .end((err, res) => {
             res.should.have.status(200);
             // res.body.should.be.a('array');
             // res.body.length.should.be.eql(0);
@@ -25,10 +25,23 @@ describe('/GET datasets', function () {
         });
     });
 });
-
-describe('/POST add datasets', function () {
-    it('It should insert datasets', function (done) {
-        var book = {
+// });
+// describe("/POST add datasets", function () {
+//   it("It should insert datasets", function (done:any) {
+//     // Use supertest to run assertions for our API
+//     chai.request(app)
+//         .post('/dataset/create')
+//         .end((err:any, res:any) => {
+//               res.should.have.status(200);
+//               // res.body.should.be.a('array');
+//               // res.body.length.should.be.eql(0);
+//           done();
+//         });
+//   });
+// });
+describe('/POST add datasets', () => {
+    it('It should insert datasets', (done) => {
+        let book = {
             id: 70,
             data_schema: {
                 name: "name5",
@@ -45,7 +58,7 @@ describe('/POST add datasets', function () {
         chai.request(app)
             .post('/dataset/create')
             .send(book)
-            .end(function (err, res) {
+            .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
             // res.body.should.have.property('errors');
@@ -83,3 +96,4 @@ describe('/POST add datasets', function () {
 //     request(app).delete("/dataset/removeData").expect(200, done);
 //   });
 // });
+//# sourceMappingURL=test.js.map

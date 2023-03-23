@@ -1,23 +1,26 @@
 "use strict";
-exports.__esModule = true;
-var express = require("express");
-var app = express();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express = require("express");
+const app = express();
 // const bodyParser = require("body-parser");
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // import { Pool } from "pg";
-var schema_1 = require("../../Config/schema");
-var errors_1 = require("../../Helpers/errors");
-var dates_1 = require("../../Config/dates");
-var queries_1 = require("../../Config/queries");
-var Connection_1 = require("../../Config/Connection");
-var connectDb = function (req, res) {
-    var error = schema_1["default"].validate(req.body, {
-        abortEarly: false
-    }).error;
+const schema_1 = __importDefault(require("../../Config/schema"));
+const errors_1 = require("../../Helpers/errors");
+const dates_1 = require("../../Config/dates");
+const queries_1 = require("../../Config/queries");
+const Connection_1 = __importDefault(require("../../Config/Connection"));
+const connectDb = (req, res) => {
+    const { error } = schema_1.default.validate(req.body, {
+        abortEarly: false, //for datatype checking using joi schema
+    });
     var dberror = {
         status: "ERROR",
-        message: "Cannot add datasets"
+        message: "Cannot add datasets",
     };
     try {
         var id = req.params["id"];
@@ -26,7 +29,7 @@ var connectDb = function (req, res) {
             res.status(422).json(errors_1.datatypes_error);
         }
         else {
-            Connection_1["default"].query(queries_1.selectid + "'".concat(id, "'=id"), function (error, data) {
+            Connection_1.default.query(queries_1.selectid + `'${id}'=id`, (error, data) => {
                 if (error)
                     res.status(500).json(dberror);
                 else if (data.rowCount == 1) {
@@ -38,18 +41,18 @@ var connectDb = function (req, res) {
                     var status1 = req.body.status || data.rows[0].status;
                     var createdBy = req.body.created_by || data.rows[0].created_by;
                     var updatedBy = req.body.updated_by || data.rows[0].updated_by;
-                    Connection_1["default"].query(queries_1.update +
-                        "data_schema='".concat(dataSchema, "', router_config='").concat(routerConfig, "', status='").concat(status1, "' ,created_by='").concat(createdBy, "', updated_by='").concat(updatedBy, "', created_date='").concat(dates_1.createdDate, "',updated_date='").concat(dates_1.updatedDate, "' WHERE id = '").concat(id, "';"), function (err) {
+                    Connection_1.default.query(queries_1.update +
+                        `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${dates_1.createdDate}',updated_date='${dates_1.updatedDate}' WHERE id = '${id}';`, (err) => {
                         if (err) {
                             res.status(502).json(dberror);
                         }
                         else {
                             //update success
-                            var detail = "datasets updated in the table successfully";
+                            var detail = `datasets updated in the table successfully`;
                             var status = "SUCCESS";
-                            var obj1 = {
-                                status: "".concat(status),
-                                message: "".concat(detail)
+                            const obj1 = {
+                                status: `${status}`,
+                                message: `${detail}`,
                             };
                             res.status(200).json(obj1);
                         }
@@ -57,20 +60,21 @@ var connectDb = function (req, res) {
                 }
                 else {
                     //datasets with key not available in database to update
-                    var detail = "Datasets with Key (id)=(".concat(id, ") does not exist.");
+                    var detail = `Datasets with Key (id)=(${id}) does not exist.`;
                     var errorStatus = "ERROR";
-                    var obj1 = {
-                        status: "".concat(errorStatus),
-                        message: "".concat(detail)
+                    const obj1 = {
+                        status: `${errorStatus}`,
+                        message: `${detail}`,
                     };
                     res.status(404).json(obj1);
                 }
             });
         }
-        Connection_1["default"].end;
+        Connection_1.default.end;
     }
     catch (error) {
         res.status(500).json(dberror);
     }
 };
-exports["default"] = connectDb;
+exports.default = connectDb;
+//# sourceMappingURL=partialupdate.js.map

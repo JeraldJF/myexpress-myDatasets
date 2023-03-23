@@ -3,7 +3,7 @@ exports.__esModule = true;
 var Pool = require('pg').Pool;
 var pool = new Pool({
     user: "user1",
-    host: "host.docker.internal",
+    host: "localhost",
     database: "datasets",
     password: "JER@ALD",
     port: 5432

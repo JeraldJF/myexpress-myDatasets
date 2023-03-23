@@ -12,7 +12,7 @@ metadata:
 
 spec:
 
-  replicas: 1
+  replicas: 2
 
   selector:
 
@@ -34,7 +34,9 @@ spec:
 
       - name: datasets
 
-        image: jerald23sanketika/express:2.0
+        image: datasets/myexpress:latest
+        
+        imagePullPolicy: Never
 
         resources:
 

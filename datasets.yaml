@@ -12,7 +12,7 @@ metadata:
 
 spec:
 
-  replicas: 2
+  replicas: 1
 
   selector:
 
@@ -34,7 +34,7 @@ spec:
 
       - name: datasets
 
-        image: datasets/myexpress:latest
+        image: jerald23sanketika/express:2.0
         
         imagePullPolicy: Never
 
@@ -74,6 +74,9 @@ spec:
       port: 3001
 
       targetPort: 3001
+
+      nodePort : 30110
+
       
-      nodePort: 31767
+
 

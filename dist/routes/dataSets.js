@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 var app = express();
-const port = 3001;
+const port = 3006;
 const getDataSet_1 = __importDefault(require("../public/typescripts/getDataSet"));
 const addDataSets_1 = __importDefault(require("../public/typescripts/addDataSets"));
 const getDatasetById_1 = __importDefault(require("../public/typescripts/getDatasetById"));

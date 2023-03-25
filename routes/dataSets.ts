@@ -1,7 +1,7 @@
 const express=require('express');
 
 var app = express();
-const port = 3001;
+const port = 3006;
 
 import getDataSet from "../public/typescripts/getDataSet";
 import addDataSets from "../public/typescripts/addDataSets";

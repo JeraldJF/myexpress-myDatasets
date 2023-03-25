@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 3001
 
-CMD [ "node", "./routes/dataSets.js" ]
+CMD [ "node", "./dist/routes/dataSets.js" ]

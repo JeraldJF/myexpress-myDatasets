@@ -34,7 +34,7 @@ var connectDb = (req, res) => {
         var createdBy = req.body.created_by;
         var updatedBy = req.body.updated_by;
         if (id) {
-            //datasets provided to post
+            //id provided to post
             Connection_1.default.query(queries_1.selectid + `'${id}'=id;`, (err, result) => {
                 if (err) {
                     res.status(502).json(dberror);
@@ -69,8 +69,8 @@ var connectDb = (req, res) => {
             });
         }
         else {
-            // datasets not provided to post
-            res.status(500).json(errors_2.nodatasets);
+            // id not provided to post
+            res.status(400).json(errors_2.nodatasets);
         }
         Connection_1.default.end;
     }

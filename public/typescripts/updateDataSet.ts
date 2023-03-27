@@ -31,47 +31,40 @@ const connectDb = (req: any, res: any) => {
     var createdBy = req.body.created_by;
     var updatedBy = req.body.updated_by;
 
-    if (!(req.params === null)) {
-      //datasets given to update
-
-      if (error) {
-        //wrong datatypes use
-        return res.status(422).json(datatypes_error);
-      } else {
-        pool.query(
-          update +
-            `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`,
-          (error: any, result: any) => {
-            if (error) {
-              res.status(502).json(dberror);
-            } else if (result.rowCount == 1) {
-              //given id present in datasets to update
-              var detail: string = `datasets updated in the table successfully`;
-              var status: string = "SUCCESS";
-              const obj1 = {
-                status: `${status}`,
-                message: `${detail}`,
-              };
-
-              res.status(200).json(obj1);
-            } else {
-              //datasets with key not available in database to update
-              var detail: string = `Datasets with Key (id)=(${id}) does not exist.`;
-              var errorStatus: string = "ERROR";
-              const obj1 = {
-                status: `${errorStatus}`,
-                message: `${detail}`,
-              };
-              res.status(404).json(obj1);
-            }
-          }
-        );
-      }
+    if (error) {
+      //wrong datatypes use
+      return res.status(422).json(datatypes_error);
     } else {
-      //no datasets given
+      pool.query(
+        update +
+          `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`,
+        (error: any, result: any) => {
+          if (error) {
+            res.status(502).json(dberror);
+          } else if (result.rowCount == 1) {
+            //given id present in datasets to update
+            var detail: string = `datasets updated in the table successfully`;
+            var status: string = "SUCCESS";
+            const obj1 = {
+              status: `${status}`,
+              message: `${detail}`,
+            };
 
-      res.status(404).json(nodatasets);
+            res.status(200).json(obj1);
+          } else {
+            //datasets with key not available in database to update
+            var detail: string = `Datasets with Key (id)=(${id}) does not exist.`;
+            var errorStatus: string = "ERROR";
+            const obj1 = {
+              status: `${errorStatus}`,
+              message: `${detail}`,
+            };
+            res.status(404).json(obj1);
+          }
+        }
+      );
     }
+
     pool.end;
   } catch (error) {
     // Database error

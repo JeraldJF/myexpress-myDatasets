@@ -21,7 +21,7 @@ app.post("/datasets/addData", addDataSets);
 
 app.put("/datasets/updateData/:id", updateDataSet);
 
-app.patch("/datasets/updateStatus/:id", updatepartially);
+app.patch("/datasets/patchData/:id", updatepartially);
 
 app.delete("/datasets/deleteData/:id", removeDataSet);
 

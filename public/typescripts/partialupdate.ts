@@ -21,7 +21,6 @@ const connectDb = (req: any, res: any) => {
 
   try {
     var id = req.params["id"];
-    
 
     if (error) {
       //wrong datatypes use
@@ -72,7 +71,6 @@ const connectDb = (req: any, res: any) => {
     pool.end;
   } catch (error) {
     res.status(500).json(dberror);
-
   }
 };
 export default connectDb;

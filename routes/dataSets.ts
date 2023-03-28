@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express=require('express');
 
 var app = express();
@@ -8,7 +9,7 @@ import addDataSets from "../public/typescripts/addDataSets";
 import getDatasetById from "../public/typescripts/getDatasetById";
 import updateDataSet from "../public/typescripts/updateDataSet";
 import removeDataSet from "../public/typescripts/removeDataSet";
-import updatepartially from "../public/typescripts/partialupdate";
+import partialupdate from "../public/typescripts/partialupdate";
 
 
 app.use(express.json());
@@ -21,7 +22,7 @@ app.post("/datasets/addData", addDataSets);
 
 app.put("/datasets/updateData/:id", updateDataSet);
 
-app.patch("/datasets/patchData/:id", updatepartially);
+app.patch("/datasets/patchData/:id", partialupdate);
 
 app.delete("/datasets/deleteData/:id", removeDataSet);
 

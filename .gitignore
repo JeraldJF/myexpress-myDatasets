@@ -1,2 +1,4 @@
 node_modules/
 Config/dev.env
+coverage
+.nyc_output

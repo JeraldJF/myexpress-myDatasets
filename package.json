@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "env-cmd -f ./.env nodemon ./routes/dataSets.ts",
+    "start": "env-cmd -f ./.env nodemon dist/routes/server.js",
     "build": "tsc",
     "test": "mocha --timeout 10000 ./dist/tests",
     "test-with-coverage": "nyc --reporter=html --reporter=text mocha --timeout 10000 ./dist/tests",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "body-parser": "^1.20.2",
+    "chai-spies": "^1.0.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "env-cmd": "^10.1.0",
@@ -42,12 +43,14 @@
     "mocha": "^10.2.0",
     "nodemon": "^2.0.21",
     "nyc": "^15.1.0",
+    "pg-mem": "^2.6.10",
+    "proxyquire": "^2.1.3",
     "pstree.remy": "^1.1.0",
     "request": "^2.83.0",
     "tsconfig-paths": "^4.1.2",
     "typescript": "^4.9.5"
   },
-  "main": "dataSets.ts",
+  "main": "server.ts",
   "keywords": [],
   "author": "",
   "license": "ISC",

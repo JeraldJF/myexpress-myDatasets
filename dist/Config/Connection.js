@@ -8,8 +8,4 @@ const { Pool } = require("pg");
 var pool = new Pool(config_1.default);
 pool.connect();
 exports.default = pool;
-// env-cmd -f ./Config/dev.env
-// host: "localhost" || process.env.HOST ,
-//     database: process.env.DB_NAME,
-//     password: process.env.DB_PASS,
 //# sourceMappingURL=Connection.js.map

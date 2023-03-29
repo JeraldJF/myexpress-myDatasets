@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // import { should } from "chai";
 require("mocha");
 // import { should } from "mocha";
-const testCon_1 = __importDefault(require("../Config/testCon"));
+const testCon_1 = __importDefault(require("../config/testCon"));
 let chai = require("chai");
 var spies = require("chai-spies");
 const app = require("../routes/server");

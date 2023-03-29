@@ -4,7 +4,7 @@
 // import { should } from "chai";
 import "mocha";
 // import { should } from "mocha";
-import pool from "../Config/testCon";
+import pool from "../config/testCon";
 let chai = require("chai");
 var spies = require("chai-spies");
 const app = require("../routes/server");

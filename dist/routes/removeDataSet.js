@@ -9,8 +9,8 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 // import { Pool } from "pg";
-const queries_1 = require("../config/queries");
-const Connection_1 = __importDefault(require("../config/Connection"));
+const queries_1 = require("../helpers/queries");
+const connection_1 = __importDefault(require("../helpers/connection"));
 var connectDb = (req, res) => {
     const error = {
         status: "ERROR",
@@ -18,7 +18,7 @@ var connectDb = (req, res) => {
     };
     try {
         var id = req.params["id"];
-        Connection_1.default.query(queries_1.deleteid + `'${id}';`, (error, data) => {
+        connection_1.default.query(queries_1.deleteid + `'${id}';`, (error, data) => {
             if (error) {
                 //db error
                 res.status(502).json(error);
@@ -44,7 +44,7 @@ var connectDb = (req, res) => {
                 res.status(404).json(obj1);
             }
         });
-        Connection_1.default.end;
+        connection_1.default.end;
     }
     catch (error) {
         // Database error

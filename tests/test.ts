@@ -4,10 +4,10 @@
 // import { should } from "chai";
 import "mocha";
 // import { should } from "mocha";
-import pool from "../config/testCon";
+import pool from "../helpers/testCon";
 let chai = require("chai");
 var spies = require("chai-spies");
-const app = require("../routes/server");
+const app = require("../app");
 const request = require("request");
 
 // const faker = require("faker");
@@ -110,6 +110,7 @@ describe("Testing", () => {
   //       // done();
   //     });
   // });
+  describe("Database dependent",()=>{
   it("get", () => {
     const returnTrue = chai.spy.returns(
       chai
@@ -217,6 +218,7 @@ describe("Testing", () => {
   //           }));
   //           returnTrue();
   // });
+});
 });
 
 

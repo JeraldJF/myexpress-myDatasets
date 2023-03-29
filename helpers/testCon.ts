@@ -1,4 +1,4 @@
-import config from "./config";
+import config from "../config/config";
 const express = require("express");
 const app = express();
 // const bodyParser = require("body-parser");
@@ -7,11 +7,11 @@ import jsonSchema from "./schema";
 // import pool from "../../Config/Connection";
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-import { datatypes_error } from "../helpers/errors";
-import { inserted } from "../helpers/success";
-import { nodatasets } from "../helpers/errors";
-import { insertdata, selectid } from "../config/queries";
-import { createdDate, updatedDate } from "../config/dates";
+import { datatypes_error } from "./errors";
+import { inserted } from "./success";
+import { nodatasets } from "./errors";
+import { insertdata, selectid } from "./queries";
+import { createdDate, updatedDate } from "./dates";
 
 const { Pool } = require("pg");
 

@@ -9,11 +9,11 @@ const app = express();
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // import { Pool } from "pg";
-const Connection_1 = __importDefault(require("../config/Connection"));
-const schema_1 = __importDefault(require("../config/schema"));
+const connection_1 = __importDefault(require("../helpers/connection"));
+const schema_1 = __importDefault(require("../helpers/schema"));
 const errors_1 = require("../helpers/errors");
-const dates_1 = require("../config/dates");
-const queries_1 = require("../config/queries");
+const dates_1 = require("../helpers/dates");
+const queries_1 = require("../helpers/queries");
 const connectDb = (req, res) => {
     const { error } = schema_1.default.validate(req.body, {
         //for datatype checking using joi schema
@@ -24,7 +24,7 @@ const connectDb = (req, res) => {
         message: "Cannot add datasets",
     };
     try {
-        Connection_1.default.connect;
+        connection_1.default.connect;
         var id = req.params["id"];
         var ds = req.body.data_schema;
         var rc = req.body.router_config;
@@ -38,7 +38,7 @@ const connectDb = (req, res) => {
             return res.status(422).json(errors_1.datatypes_error);
         }
         else {
-            Connection_1.default.query(queries_1.update +
+            connection_1.default.query(queries_1.update +
                 `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${dates_1.createdDate}',updated_date='${dates_1.updatedDate}' WHERE id = '${id}';`, (error, result) => {
                 if (error) {
                     res.status(502).json(dberror);
@@ -65,7 +65,7 @@ const connectDb = (req, res) => {
                 }
             });
         }
-        Connection_1.default.end;
+        connection_1.default.end;
     }
     catch (error) {
         // Database error

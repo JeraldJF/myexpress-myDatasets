@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // import { should } from "chai";
 require("mocha");
 // import { should } from "mocha";
-const testCon_1 = __importDefault(require("../config/testCon"));
+const testCon_1 = __importDefault(require("../helpers/testCon"));
 let chai = require("chai");
 var spies = require("chai-spies");
-const app = require("../routes/server");
+const app = require("../app");
 const request = require("request");
 // const faker = require("faker");
 let chaiHttp = require("chai-http");
@@ -105,107 +105,109 @@ describe("Testing", () => {
     //       // done();
     //     });
     // });
-    it("get", () => {
-        const returnTrue = chai.spy.returns(chai
-            .request(app)
-            .get("/datasets/get")
-            .end((err, res) => {
-            res.should.have.status(200);
-        }));
-        returnTrue();
-    });
-    // it("delete", () => {
-    //   const returnTrue = chai.spy.returns(
-    //     chai
-    //       .request(app)
-    //       .delete("/datasets/deleteData/d25")
-    //       .end((err: any, res: any) => {
-    //         res.should.have.status(200);
-    //         res.body.should.be.a("object");
-    //       })
-    //   );
-    //   returnTrue();
-    // });
-    // it("delete mock", () => {
-    //   let d:any;
-    //   const mocked=chai.spy.interface(
-    //     d=()=>{
-    //       let data={
-    //         id:"d22",
-    //         data_schema: {
-    //                 name: "name5",
-    //                 age: 245,
-    //               },
-    //               router_config: {
-    //                 name: "user3",
-    //                 method: "Put",
-    //               },
-    //               status: "Accepted",
-    //               created_by: "cloud2",
-    //               updated_by: "user3"
-    //       }
-    //     chai
-    //     .request(app)
-    //       .delete("/datasets/deleteData/d24")
-    //       .send(data)
-    //       .end((err: any, res: any) => {
-    //         res.should.have.status(200);
-    //         res.body.should.be.a("object");
-    //       })
-    // });
-    //     mocked();
-    // });
-    it("get", () => {
-        chai.spy.on(testCon_1.default, 'query', (returns) => 200);
-        chai
-            .request(testCon_1.default)
-            .delete("/datasets/deleteData/145")
-            .end((err, res) => {
-            res.should.have.status(404);
-            res.body.should.be.a("object");
-            // res.body.length.should.be.eql(0);
+    describe("Database dependent", () => {
+        it("get", () => {
+            const returnTrue = chai.spy.returns(chai
+                .request(app)
+                .get("/datasets/get")
+                .end((err, res) => {
+                res.should.have.status(200);
+            }));
+            returnTrue();
         });
+        // it("delete", () => {
+        //   const returnTrue = chai.spy.returns(
+        //     chai
+        //       .request(app)
+        //       .delete("/datasets/deleteData/d25")
+        //       .end((err: any, res: any) => {
+        //         res.should.have.status(200);
+        //         res.body.should.be.a("object");
+        //       })
+        //   );
+        //   returnTrue();
+        // });
+        // it("delete mock", () => {
+        //   let d:any;
+        //   const mocked=chai.spy.interface(
+        //     d=()=>{
+        //       let data={
+        //         id:"d22",
+        //         data_schema: {
+        //                 name: "name5",
+        //                 age: 245,
+        //               },
+        //               router_config: {
+        //                 name: "user3",
+        //                 method: "Put",
+        //               },
+        //               status: "Accepted",
+        //               created_by: "cloud2",
+        //               updated_by: "user3"
+        //       }
+        //     chai
+        //     .request(app)
+        //       .delete("/datasets/deleteData/d24")
+        //       .send(data)
+        //       .end((err: any, res: any) => {
+        //         res.should.have.status(200);
+        //         res.body.should.be.a("object");
+        //       })
+        // });
+        //     mocked();
+        // });
+        it("get", () => {
+            chai.spy.on(testCon_1.default, 'query', (returns) => 200);
+            chai
+                .request(testCon_1.default)
+                .delete("/datasets/deleteData/145")
+                .end((err, res) => {
+                res.should.have.status(404);
+                res.body.should.be.a("object");
+                // res.body.length.should.be.eql(0);
+            });
+        });
+        // it("not delete", () => {
+        //   const a={
+        //   }
+        //   const returnTrue = chai.spy.returns(
+        //     chai
+        //       .request(app)
+        //       .delete("/datasets/deleteData/145")
+        //       .end((err: any, res: any) => {
+        //         res.should.have.status(404);
+        //         res.body.should.be.a("object");
+        //         // res.body.length.should.be.eql(0);
+        //       })
+        //   );
+        //   returnTrue();
+        // });
+        // it("patch",()=>{
+        //   let data = {
+        //     data_schema: {
+        //       name: "name5",
+        //       age: 245,
+        //     },
+        //     router_config: {
+        //       name: "user3",
+        //       method: "Put",
+        //     },
+        //     status: "Accepted",
+        //     created_by: "cloud2",
+        //     updated_by: "user3",
+        //   };
+        //   const returnTrue = chai.spy.returns(
+        //         chai
+        //           .request(app)
+        //           .put("/datasets/updateData/d28")
+        //           .send(data)
+        //           .end((err: any, res: any) => {
+        //             res.should.have.status(200);
+        //             res.body.should.be.a('object');
+        //           }));
+        //           returnTrue();
+        // });
     });
-    // it("not delete", () => {
-    //   const a={
-    //   }
-    //   const returnTrue = chai.spy.returns(
-    //     chai
-    //       .request(app)
-    //       .delete("/datasets/deleteData/145")
-    //       .end((err: any, res: any) => {
-    //         res.should.have.status(404);
-    //         res.body.should.be.a("object");
-    //         // res.body.length.should.be.eql(0);
-    //       })
-    //   );
-    //   returnTrue();
-    // });
-    // it("patch",()=>{
-    //   let data = {
-    //     data_schema: {
-    //       name: "name5",
-    //       age: 245,
-    //     },
-    //     router_config: {
-    //       name: "user3",
-    //       method: "Put",
-    //     },
-    //     status: "Accepted",
-    //     created_by: "cloud2",
-    //     updated_by: "user3",
-    //   };
-    //   const returnTrue = chai.spy.returns(
-    //         chai
-    //           .request(app)
-    //           .put("/datasets/updateData/d28")
-    //           .send(data)
-    //           .end((err: any, res: any) => {
-    //             res.should.have.status(200);
-    //             res.body.should.be.a('object');
-    //           }));
-    //           returnTrue();
-    // });
 });
 /*
 var chai = require('chai');

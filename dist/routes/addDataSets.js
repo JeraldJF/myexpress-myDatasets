@@ -7,15 +7,15 @@ const express = require("express");
 const app = express();
 // const bodyParser = require("body-parser");
 // import { Pool } from "pg";
-const schema_1 = __importDefault(require("../config/schema"));
-const Connection_1 = __importDefault(require("../config/Connection"));
+const schema_1 = __importDefault(require("../helpers/schema"));
+const connection_1 = __importDefault(require("../helpers/connection"));
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 const errors_1 = require("../helpers/errors");
 const success_1 = require("../helpers/success");
 const errors_2 = require("../helpers/errors");
-const queries_1 = require("../config/queries");
-const dates_1 = require("../config/dates");
+const queries_1 = require("../helpers/queries");
+const dates_1 = require("../helpers/dates");
 var connectDb = (req, res) => {
     var { error } = schema_1.default.validate(req.body, {
         abortEarly: false,
@@ -35,7 +35,7 @@ var connectDb = (req, res) => {
         var updatedBy = req.body.updated_by;
         if (id) {
             //id provided to post
-            Connection_1.default.query(queries_1.selectid + `'${id}'=id;`, (err, result) => {
+            connection_1.default.query(queries_1.selectid + `'${id}'=id;`, (err, result) => {
                 if (err) {
                     res.status(502).json(dberror);
                 }
@@ -46,7 +46,7 @@ var connectDb = (req, res) => {
                         res.status(422).json(errors_1.datatypes_error);
                     }
                     else {
-                        Connection_1.default.query(queries_1.insertdata +
+                        connection_1.default.query(queries_1.insertdata +
                             `(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${dates_1.createdDate}', '${dates_1.updatedDate}');`, (error, data) => {
                             if (error)
                                 res.status(500).json(dberror);
@@ -72,7 +72,7 @@ var connectDb = (req, res) => {
             // id not provided to post
             res.status(400).json(errors_2.nodatasets);
         }
-        Connection_1.default.end;
+        connection_1.default.end;
     }
     catch (error) {
         // Database error

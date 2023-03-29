@@ -9,11 +9,11 @@ const app = express();
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // import { Pool } from "pg";
-const schema_1 = __importDefault(require("../config/schema"));
+const schema_1 = __importDefault(require("../helpers/schema"));
 const errors_1 = require("../helpers/errors");
-const dates_1 = require("../config/dates");
-const queries_1 = require("../config/queries");
-const Connection_1 = __importDefault(require("../config/Connection"));
+const dates_1 = require("../helpers/dates");
+const queries_1 = require("../helpers/queries");
+const connection_1 = __importDefault(require("../helpers/connection"));
 const connectDb = (req, res) => {
     const { error } = schema_1.default.validate(req.body, {
         abortEarly: false, //for datatype checking using joi schema
@@ -29,7 +29,7 @@ const connectDb = (req, res) => {
             res.status(422).json(errors_1.datatypes_error);
         }
         else {
-            Connection_1.default.query(queries_1.selectid + `'${id}'=id`, (error, data) => {
+            connection_1.default.query(queries_1.selectid + `'${id}'=id`, (error, data) => {
                 if (error)
                     res.status(500).json(dberror);
                 else if (data.rowCount == 1) {
@@ -41,7 +41,7 @@ const connectDb = (req, res) => {
                     var status1 = req.body.status || data.rows[0].status;
                     var createdBy = req.body.created_by || data.rows[0].created_by;
                     var updatedBy = req.body.updated_by || data.rows[0].updated_by;
-                    Connection_1.default.query(queries_1.update +
+                    connection_1.default.query(queries_1.update +
                         `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${dates_1.createdDate}',updated_date='${dates_1.updatedDate}' WHERE id = '${id}';`, (err) => {
                         if (err) {
                             res.status(502).json(dberror);
@@ -70,7 +70,7 @@ const connectDb = (req, res) => {
                 }
             });
         }
-        Connection_1.default.end;
+        connection_1.default.end;
     }
     catch (error) {
         res.status(500).json(dberror);

@@ -1,5 +1,5 @@
-import pool from "../config/Connection";
-import { select } from "../config/queries";
+import pool from "../helpers/connection";
+import { select } from "../helpers/queries";
 
 const express = require("express");
 const app = express();

@@ -1,5 +1,5 @@
 
-import config from "./config";
+import config from "../config/config";
 const { Pool } = require("pg");
 
 var pool = new Pool(config);

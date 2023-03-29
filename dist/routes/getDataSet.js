@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Connection_1 = __importDefault(require("../config/Connection"));
-const queries_1 = require("../config/queries");
+const connection_1 = __importDefault(require("../helpers/connection"));
+const queries_1 = require("../helpers/queries");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var connectDB = (req, res) => {
     try {
-        Connection_1.default.query(queries_1.select, (error, data) => {
+        connection_1.default.query(queries_1.select, (error, data) => {
             if (data.rowCount > 0) {
                 // display datasets
                 res.send(data.rows);
@@ -28,7 +28,7 @@ var connectDB = (req, res) => {
                 res.status(404).json(obj1);
             }
         });
-        Connection_1.default.end;
+        connection_1.default.end;
     }
     catch (error) {
         // Database error

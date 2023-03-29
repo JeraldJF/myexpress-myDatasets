@@ -2,15 +2,15 @@ const express = require("express");
 const app = express();
 // const bodyParser = require("body-parser");
 // import { Pool } from "pg";
-import jsonSchema from "../config/schema";
-import pool from "../config/Connection";
+import jsonSchema from "../helpers/schema";
+import pool from "../helpers/connection";
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 import { datatypes_error } from "../helpers/errors";
 import { inserted } from "../helpers/success";
 import { nodatasets } from "../helpers/errors";
-import { insertdata, selectid } from "../config/queries";
-import { createdDate, updatedDate } from "../config/dates";
+import { insertdata, selectid } from "../helpers/queries";
+import { createdDate, updatedDate } from "../helpers/dates";
 
 var connectDb = (req: any, res: any) => {
   var { error } = jsonSchema.validate(req.body, {

@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // import { Pool } from "pg";
-const queries_1 = require("../config/queries");
+const queries_1 = require("../helpers/queries");
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const Connection_1 = __importDefault(require("../config/Connection"));
+const connection_1 = __importDefault(require("../helpers/connection"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var connectDb = (req, res) => {
@@ -18,7 +18,7 @@ var connectDb = (req, res) => {
     };
     try {
         var id = req.params["id"];
-        const dataById = Connection_1.default.query(queries_1.selectid + `id='${id}';`, (error, data) => {
+        const dataById = connection_1.default.query(queries_1.selectid + `id='${id}';`, (error, data) => {
             if (error) {
                 res.status(502).json(dberror);
             }
@@ -36,7 +36,7 @@ var connectDb = (req, res) => {
                 res.status(404).json(obj1);
             }
         });
-        Connection_1.default.end;
+        connection_1.default.end;
         // return true;
     }
     catch (error) {

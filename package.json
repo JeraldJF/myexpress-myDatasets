@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "env-cmd -f ./.env nodemon dist/app.js",
+    "start": "env-cmd -f ./config/.env nodemon dist/app.js",
     "build": "tsc",
     "test": "mocha --timeout 10000 ./dist/tests",
     "test-with-coverage": "nyc --reporter=html --reporter=text mocha --timeout 10000 ./dist/tests",

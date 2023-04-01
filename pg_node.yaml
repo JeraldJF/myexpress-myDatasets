@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+spec:
+  selector:
+    matchLabels:
+      app: test-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+        - name: postgres
+          image: jerald23sanketika/test-postgres
+          ports:
+            - containerPort: 5432
+        - name: api
+          image: jerald23sanketika/test-node
+          ports:
+            - containerPort: 3000
+

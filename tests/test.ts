@@ -1,4 +1,933 @@
+var chai = require("chai");
+var chaiHttp = require("chai-http");
+import { expect, should } from "chai";
+import app from "../app";
+import * as db from "../helpers/testCon";
 
+// import { query } from 'express';
+var spies = require("chai-spies");
+chai.use(spies);
+chai.use(chaiHttp);
+chai.should();
+// const sandbox = chai.spy.sandbox();
+// chai.use(should)
+
+describe("/GET", () => {
+  it("should GET datasets", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rows: [{}] };
+    });
+
+    chai
+      .request(app)
+      .get("/datasets/get")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(200);
+        response.body.should.be.an("array");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+  it("should not GET datasets", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 0, rows: [] };
+    });
+
+    chai
+      .request(app)
+      .get("/datasets/get")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(404);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+});
+
+describe("/GET:id", () => {
+  it("should GET datasets of given id", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 1, rows: [{ id: "getid" }] };
+    });
+
+    chai
+      .request(app)
+      .get("/datasets/id/128")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(200);
+        response.body.should.be.an("array");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+  it("should not GET datasets with given id", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 0 };
+    });
+
+    chai
+      .request(app)
+      .get("/datasets/id/56")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(404);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+});
+
+describe("/POST:id", () => {
+  it("should not Post datasets", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 1, rows: [{ id: "postedid" }] };
+    });
+
+    chai
+      .request(app)
+      .post("/datasets/addData")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(409);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+    //
+  });
+  it("should Post datasets", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 0 };
+    });
+
+    chai
+      .request(app)
+      .get("/datasets/id/45")
+      .end((err: any, response: any) => {
+        // console.log(response);
+        if (response.status == 404) {
+          chai
+            .request(app)
+            .post("/datasets/addData")
+            .end((err: any, response: any) => {
+              // console.log(response.body);
+
+              response.should.have.status(200);
+              response.body.should.be.an("object");
+              // expect(response.body).to.be.an("array")
+              // response.body.length.should.be.eql(0);
+              chai.spy.restore(db.pool, "query");
+              done();
+            });
+        }
+      });
+  });
+  it("datatype Invalid", (done: any) => {
+    let data = {
+      data_schema: {
+        name: "name5",
+        age: 13,
+      },
+      router_config: "yo",
+      status: "Accepted",
+      created_by: "cloud2",
+      updated_by: "user3",
+    };
+    chai
+      .request(app)
+      .post("/datasets/addData")
+      .send(data)
+      .end((err: any, res: any) => {
+        res.should.have.status(422);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
+});
+
+describe("/DELETE:id", () => {
+  it("should DELETE datasets of given id", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 1 };
+    });
+
+    chai
+      .request(app)
+      .delete("/datasets/deleteData/db01")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(200);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+  it("should not delete datasets with given id", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 0 };
+    });
+
+    chai
+      .request(app)
+      .delete("/datasets/deleteData/db01")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(404);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+});
+
+describe("/UPDATE:ID", () => {
+  it("should UPDATE datasets of given id", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 1 };
+    });
+
+    chai
+      .request(app)
+      .put("/datasets/updateData/35")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(200);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+  it("should not UPDATE datasets with given id", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 0 };
+    });
+
+    chai
+      .request(app)
+      .put("/datasets/updateData/35")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(404);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+  it("Invalid datatype to put", function (done: any) {
+    let data = {
+      data_schema: {
+        name: "name5",
+        age: 13,
+      },
+      router_config: "yo",
+      status: "Accepted",
+      created_by: "cloud2",
+      updated_by: "user3",
+    };
+    chai
+      .request(app)
+      .put("/datasets/updateData/140")
+      .send(data)
+      .end((err: any, res: any) => {
+        res.should.have.status(422);
+        res.body.should.be.a("object");
+        // res.body.length.should.be.eql(0);
+        done();
+      });
+  });
+});
+
+describe("/PARTIAL_UPDATE:ID", () => {
+  // it("should PATCH UPDATE datasets of given id", (done) => {
+  //   chai.spy.on(db.pool, "query", () => {
+  //     return { rowCount: 1 };
+  //   });
+
+  //   chai
+  //     .request(app)
+  //     .get("/datasets/id/46")
+  //     .end((err:any,response:any)=>{
+  //       // console.log(response);
+  //       if(response.status==404){
+  //         chai
+  //         .request(app)
+  //         .patch("/datasets/patchData/76")
+  //         .end((err: any, response: any) => {
+  //           // console.log(response.body);
+
+  //           response.should.have.status(200);
+  //           response.body.should.be.an("object");
+  //           // expect(response.body).to.be.an("array")
+  //           // response.body.length.should.be.eql(0);
+  //           chai.spy.restore(db.pool, "query");
+  //           done();
+  //         });
+  //       }
+
+  //     })
+  // });
+  it("should not PATCH UPDATE datasets with given id", (done) => {
+    chai.spy.on(db.pool, "query", () => {
+      return { rowCount: 0 };
+    });
+
+    chai
+      .request(app)
+      .patch("/datasets/patchData/56")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(404);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+  it("invalid datatype to patch", function (done: any) {
+    // chai.spy.on(db.pool, "query", () => {
+    //   return { rowCount: 1 };
+    // });
+
+    let data = {
+      data_schema: {
+        name: "name5",
+        age: 13,
+      },
+      router_config: "yo",
+      status: "Accepted",
+      created_by: "cloud2",
+      updated_by: "user3",
+    };
+
+    // chai
+    //   .request(app)
+    //   .get("/datasets/id/46")
+    //   .end((err: any, response: any) => {
+    //     // console.log(response);
+    //     if (response.status == 404) {
+          chai
+            .request(app)
+            .patch("/datasets/patchData/d02")
+            .send(data)
+            .end((err: any, res: any) => {
+              res.should.have.status(422);
+              res.body.should.be.a("object");
+              // res.body.length.should.be.eql(0);
+              done();
+            });
+        // }
+      // });
+  });
+});
+
+describe("Route", () => {
+  it("Invalid route", (done) => {
+    chai.spy.on(app, "get", () => {
+      return { params: { "0": "/datasets/g" } };
+    });
+    chai
+      .request(app)
+      .get("/datasets/g")
+      .end((err: any, response: any) => {
+        // console.log(response.body);
+
+        response.should.have.status(404);
+        response.body.should.be.an("object");
+        // expect(response.body).to.be.an("array")
+        // response.body.length.should.be.eql(0);
+        chai.spy.restore(db.pool, "query");
+        done();
+      });
+  });
+});
+
+//   it('should not GET datasets with given id', (done) => {
+//     chai.spy.on(db.pool, 'query', () => {
+//         return { rowCount:0}
+//     })
+
+//     chai.request(app)
+//         .get('/datasets/id/56')
+//         .end((err: any, response: any) => {
+//           // console.log(response.body);
+
+//             response.should.have.status(404);
+//             response.body.should.be.an('object');
+//             // expect(response.body).to.be.an("array")
+//             // response.body.length.should.be.eql(0);
+//             chai.spy.restore(db.pool, 'query')
+//             done();
+//         })
+// })
+// });
+
+// describe('get records by id', () => {
+//     it('should GET the records by id', (done) => {
+//         chai.spy.on(dataset2.pool, 'query', () => {
+//             return { "rows": [{}] }
+//         })
+
+//         chai.request(app)
+//             .get('/dataset1/get/100')
+//             .end((err: any, response: any) => {
+//                 response.should.have.status(200);
+//                 response.body.should.be.a('array');
+//                 response.body.length.should.not.be.eql(0);
+//                 chai.spy.restore(dataset2.pool, 'query')
+//                 done();
+//             })
+//     })
+//     it('records not found', (done) => {
+//         chai.spy.on(dataset2.pool, 'query', () => {
+//             return { "rowsCount":0 }
+//         })
+//         chai.request(app)
+//             .get('/dataset1/get/200')
+//             .end((err: any, response: any) => {
+//                 response.should.have.status(404);
+//                 response.body.should.not.be.a('array');
+//                 //response.body.length.should.be.eql(0);
+//                 chai.spy.restore(dataset2.pool, 'query')
+//                 done();
+//             })
+//     })
+// });
+// describe('create records', () => {
+//     it('insert the records', (done) => {
+//         chai.spy.on(pool, 'query', () => {
+//             return { "rows": [{}] }
+//         })
+
+//         chai.request(app)
+//             .post('/datasets/addData')
+//             .end((err: any, response: any) => {
+//                 response.should.have.status(200);
+//                 response.body.should.be.a('array');
+//                 response.body.length.should.not.be.eql(0);
+//                 chai.spy.restore(pool, 'query')
+//                 done();
+//             })
+//     })
+// })
+
+// // import * as db from "../helpers/testCon";
+// import pool from "../helpers/testCon";
+
+// var chai = require("chai");
+// var chaiHttp = require("chai-http");
+// import app from "../app";
+// var spies = require("chai-spies");
+// chai.use(spies);
+// chai.use(chaiHttp);
+// chai.should();
+// var chaiHttp = require("chai-http");
+// var expect = chai.expect;
+
+// describe("get records", () => {
+//   it("should GET all the records", (done) => {
+//     chai.spy.on(pool, "SELECT * FROM datasets", (err: any, result: any) => {});
+//     chai
+//       .request(app)
+//       .get("/datasets/get")
+//       .end((err: any, response: any) => {
+//         // console.log(response.body);
+//         if(err){
+
+//         }
+//         response.should.have.status(200);
+//         response.body.should.be.a("array");
+//         response.body.length.should.not.be.eql(0);
+//         // chai.spy.restore()
+//         done();
+//       });
+//   });
+
+//   it("should give 204 for empty table", (done)=>{
+//       chai
+//       .request(app)
+//       .get("/datasets/ge")
+//       .end((err: any, response: any) => {
+//         if(err){
+//             response.should.have.status(0)
+//         }
+
+//         //   response.should.have.status(400)
+//           done();
+//         });
+
+//     })
+// });
+
+/*
+
+
+import chai from 'chai';
+const expect = chai.expect;
+const sinon = require('sinon');
+// const request = require('supertest');
+import "mocha";
+// import { should } from "mocha";
+
+
+var spies = require("chai-spies");
+// const app = require("../app");
+const request = require("request");
+
+// const faker = require("faker");
+
+// let chaiHttp = require("chai-http");
+chai.should();
+
+// let expect = chai.expect;
+
+var mocha = require("mocha");
+var describe = mocha.describe;
+var it = mocha.it;
+const app = require('../helpers/testCon');
+const app1=require("../app");
+import pool from "../helpers/connection";
+import chaiHttp from "chai-http";
+// chai.should();
+// var expect = chai.expect;
+chai.use(chaiHttp);
+
+// console.log(pool);
+describe('GET /data', () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('should return a list of datasets', (done:any) => {
+    const fakeData = [
+      { id: "d22",
+              data_schema: {
+                name: "name5",
+                age: 245,
+              },
+              router_config: {
+                name: "user3",
+                method: "Put",
+              },
+              status: "Accepted",
+              created_by: "cloud2",
+              updated_by: "user3" },
+      { id: "d22",
+      data_schema: {
+        name: "name5",
+        age: 245,
+      },
+      router_config: {
+        name: "user3",
+        method: "Put",
+      },
+      status: "Accepted",
+      created_by: "cloud2",
+      updated_by: "user3" },
+    ];
+    // const poolQueryStub = sinon.stub(pool, 'query').yields(null, { rows: fakeData });
+    // pool.query("SELECT * FROM datasets;")
+    sinon.stub(pool,'connect');
+    const poolQueryStub = sinon.stub(pool,"query").callsFake((query:any, callback:any) => {
+      const data = {
+        rowCount: 1,
+        rows: [
+          {
+            id: "d22",
+            data_schema: {
+              name: "name5",
+              age: 245,
+            },
+            router_config: {
+              name: "user3",
+              method: "Put",
+            },
+            status: "Accepted",
+            created_by: "cloud2",
+            updated_by: "user3",
+          },
+        ],
+      };
+      callback(null,data);
+    });
+
+    request(app)
+      .get('/datasets/get')
+      .expect(200)
+      .end((err:any, res:any) => {
+        if (err) return done(err);
+
+        expect(res.body).to.deep.equal(fakeData);
+        // expect(poolQueryStub.calledOnce).to.be.true;
+        // expect(poolQueryStub.firstCall.args[0]).to.equal('SELECT * FROM datasets;');
+
+        done();
+      });
+  });
+  describe("Client side api testing", () => {
+    it("Invalid route", (done: any) => {
+      chai
+        .request(app1)
+        .get("/datasets/")
+        .end((err: any, res: any) => {
+          res.should.have.status(404);
+          res.body.should.be.a("object");
+          // res.body.length.should.be.eql(0);
+          done();
+        });
+    });
+    it("No data to post", (done: any) => {
+      chai
+        .request(app1)
+        .post("/datasets/addData")
+        .end((err: any, res: any) => {
+          res.should.have.status(400);
+          res.body.should.be.a('object');
+          done();
+        });
+    });
+    it("Invalid datatype to put", function (done: any) {
+      let data = {
+        data_schema: {
+          name: "name5",
+          age: 13,
+        },
+        router_config: "yo",
+        status: "Accepted",
+        created_by: "cloud2",
+        updated_by: "user3",
+      };
+      chai
+        .request(app1)
+        .put("/datasets/updateData/140")
+        .send(data)
+        .end((err: any, res: any) => {
+          res.should.have.status(422);
+          res.body.should.be.a('object');
+          // res.body.length.should.be.eql(0);
+          done();
+        });
+    });
+    it("invalid datatype to patch", function (done: any) {
+      let data = {
+        data_schema: {
+          name: "name5",
+          age: 13,
+        },
+        router_config: "yo",
+        status: "Accepted",
+        created_by: "cloud2",
+        updated_by: "user3",
+      };
+      chai
+        .request(app1)
+        .patch("/datasets/patchData/d02")
+        .send(data)
+        .end((err: any, res: any) => {
+          res.should.have.status(422);
+          res.body.should.be.a('object');
+          // res.body.length.should.be.eql(0);
+          done();
+        });
+    });
+  });
+
+
+*/
+
+// it('error if there is a problem with the database', (done) => {
+//   const poolQueryStub = sinon.stub(pool, 'query').yields(new Error('Database error'));
+
+//   request(app)
+//     .get('/datasets/get')
+//     .expect(500)
+//     .end((err:any, res:any) => {
+//       if (err) return done(err);
+
+//       expect(res.body).to.deep.equal({ error: 'Database error' });
+//       expect(poolQueryStub.calledOnce).to.be.true;
+//       expect(poolQueryStub.firstCall.args[0]).to.equal('SELECT * FROM datasets;');
+
+//       done();
+//     });
+// });
+// });
+
+/*
+
+
+
+const chai = require("chai");
+
+// const chaiSpies = require("chai-spies");
+
+var spies = require("chai-spies");
+
+chai.use(spies);
+import { request } from "chai";
+import chaiHttp from "chai-http";
+chai.should();
+var expect = chai.expect;
+chai.use(chaiHttp);
+// chai.use(chaiSpies);
+import poolModule from "../helpers/connection";
+
+import express from "express";
+
+// chai.use(chaiHttp);
+// chai.use(chaiSpies);
+
+// const app = express();
+// const app = require("../helpers/testCon");
+const app = chai.request.agent('http://localhost:3006');
+// const port = 3006;
+
+import pool from "../helpers/connection";
+
+// const pool = new Pool({
+//   user: "postgres",
+//   host: "localhost",
+//   database: "myapp",
+//   password: "password",
+//   port: 5432,
+// });
+
+describe("Database independent", () => {
+  const mockQuery = chai.spy((query: any, callback: any) => {
+    const data = {
+      rowCount: 1,
+      rows: [
+        {
+          id: "d22",
+          data_schema: {
+            name: "name5",
+            age: 245,
+          },
+          router_config: {
+            name: "user3",
+            method: "Put",
+          },
+          status: "Accepted",
+          created_by: "cloud2",
+          updated_by: "user3",
+        },
+      ],
+    };
+    callback(null, data);
+  });
+  before(() => {
+    chai.spy.on(pool, "query", mockQuery);
+  });
+  after(() => {
+    chai.spy.restore();
+  });
+  it("get", (done: any) => {
+  request(app)
+      .get("/datasets/get")
+      .end((err: any, res: any) => {
+        res.should.have.status(200);
+        // res.body.should.be.an("array");
+        // res.body[0].should.have.property("id");
+        // res.body[3].should.have.property("status");
+        chai.spy.restore(pool, "query");
+        expect(mockQuery.firstCall.args[0]).to.equal('id');
+        done();
+      });
+  });
+  it("post", (done: any) => {
+    request(app)
+      .post("/datasets/add")
+      .end((err: any, res: any) => {
+        res.should.have.status(200);
+        // res.body.should.be.an("array");
+        // res.body[0].should.have.property("id");
+        // res.body[3].should.have.property("status");
+        chai.spy.restore(pool, "query");
+        // expect(mockQuery.firstCall.args[0]).to.equal('id');
+        done();
+      });
+  });
+});
+
+*/
+
+// chai.spy.on(pool, 'query', () => {
+//   return {
+//     rowCount: 1,
+//     rows: [
+//       {
+//         id: "d22",
+//         data_schema: {
+//           name: "name5",
+//           age: 245,
+//         },
+//         router_config: {
+//           name: "user3",
+//           method: "Put",
+//         },
+//         status: "Accepted",
+//         created_by: "cloud2",
+//         updated_by: "user3",
+//       }
+//     ]
+//   }});
+
+// });
+
+// import chaiHttp from 'chai-http';
+// import connectDB from '../routes/getDataSet';
+// const chai = require('chai')
+// chai.use(chaiHttp);
+// const chaiSpies = require("chai-spies");
+
+// var spies = require('chai-spies');
+
+// chai.use(spies);
+
+// // const should = chai.should()
+// var expect = chai.expect;
+// chai.use(chaiHttp);
+// chai.use(chaiSpies);
+
+// const app = chai.request.agent('http://localhost:3000');
+
+// describe('ConnectDB', () => {
+//   it('should return data if the table is not empty', async () => {
+//     const mockReq = {};
+//     const mockRes = {
+//       send: chai.spy(),
+//       status: chai.spy(() => mockRes),
+//       json: chai.spy(() => mockRes)
+//     };
+//     const mockQuery = chai.spy((query: any, callback: any) => {
+//       const data = {
+//         rowCount: 1,
+//         rows: [{ id:"d22",
+//         data_schema: {
+//                 name: "name5",
+//                 age: 245,
+//               },
+//               router_config: {
+//                 name: "user3",
+//                 method: "Put",
+//               },
+//               status: "Accepted",
+//               created_by: "cloud2",
+//               updated_by: "user3" }]
+//       };
+//       callback(null, data);
+//     });
+
+//     const mockPool = {
+//       query: mockQuery,
+//       end: chai.spy()
+//     };
+//     const mockConnection = chai.spy(() => mockPool);
+//     const poolModule = require('../helpers/connection');
+//     poolModule.default = mockConnection;
+
+//     await connectDB(mockReq, mockRes);
+
+//     expect(mockRes.status).to.have.been.called.with(200);
+//     // expect(mockRes.send).to.have.been.called.with([{ name: 'Dataset 1' }]);
+//     expect(mockPool.query).to.have.been.called();
+//     expect(mockPool.end).to.have.been.called();
+//   });
+
+//   it('should return error message if the table is empty', async () => {
+//     const mockReq = {};
+//     const mockRes = {
+//       send: chai.spy(),
+//       status: chai.spy(() => mockRes),
+//       json: chai.spy(() => mockRes)
+//     };
+//     const mockQuery = chai.spy((query: any, callback: any) => {
+//       const data = {
+//         rowCount: 0,
+//         rows: []
+//       };
+//       callback(null, data);
+//     });
+
+//     const mockPool = {
+//       query: mockQuery,
+//       end: chai.spy()
+//     };
+//     const mockConnection = chai.spy(() => mockPool);
+//     const poolModule = require('../helpers/connection');
+//     poolModule.default = mockConnection;
+
+//     await connectDB(mockReq, mockRes);
+
+//     expect(mockRes.status).to.have.been.called.with(404);
+//     expect(mockRes.json).to.have.been.called.with({
+//       status: 'ERROR',
+//       message: 'Table is empty'
+//     });
+//     expect(mockPool.query).to.have.been.called();
+//     expect(mockPool.end).to.have.been.called();
+//   });
+// });
+//   // it('should return error message if there is a database error', async () => {
+//   //   const mockReq = {};
+//   //   const mockRes = {
+//   //     send: chai.spy(),
+//   //     status: chai.spy(() => mockRes),
+//   //     json: chai.spy(() => mockRes)
+//   //   };
+//   //   const mockError = new Error('Database error');
+
+//   //   const mockQuery = chai.spy((query: any, callback: any) => {
+//   //     callback(mockError);
+//   //   });
+
+//   //   const mockPool = {
+//   //     query: mockQuery,
+//   //     end: chai.spy()
+//   //   };
+//   //   const mockConnection = chai.spy(() => mockPool);
+//   //   const poolModule = require('../src/helpers/connection');
+//   //   poolModule.default = mockConnection;
+
+//   //   await connectDB(mockReq, mockRes);
+
+//   //   expect(mockRes.status).to.have.been.called.with(500);
+//   //   expect(mockRes.json).to.have.been.called
+
+/*
 
 
 // import { should } from "chai";
@@ -221,9 +1150,7 @@ describe("Testing", () => {
 });
 });
 
-
-
-
+*/
 
 /*
 var chai = require('chai');
@@ -281,9 +1208,6 @@ var expect = chai.expect;
   });
 
 */
-
-
-
 
 /*
 
@@ -363,8 +1287,6 @@ describe('GET /users', function() {
 
 
 */
-
-
 
 /*
 
@@ -492,15 +1414,16 @@ describe('connectDb', function() {
 
 /*
 
-process.env.NODE_ENV = 'test';
+
+// process.env.NODE_ENV = 'test';
 import "mocha";
 const { create } = require('pg-mem');
 
 // Create an instance of pg-mem
 const pg = create;
 const sinon = require('sinon');
-const request = require("../routes/server");
-// const request = require('request');
+// const request = require("../helpers/testCon");
+const request = require('request');
 let chai = require("chai");
 const should = chai.should();
 // const app=require();
@@ -534,16 +1457,16 @@ const base = 'http://localhost:3006';
         ]
       };
       beforeEach(() => {
-        let get = sinon.stub(request, 'get');
+        let get1 = sinon.stub(request, 'get');
       });
 
       afterEach(() => {
-        this.get.restore();
+        request.get1.restore();
       });
       describe('GET', () => {
         it('should return data', (done) => {
           request.get.yields(null, responseObject, JSON.stringify(responseBody));
-          request.get(`/datasets/get`, (err:any, res:any, body:any) => {
+          request.get1(`/datasets/get`, (err:any, res:any, body:any) => {
             // there should be a 200 status code
             res.statusCode.should.eql(200);
             // the response should be JSON
@@ -570,6 +1493,9 @@ const base = 'http://localhost:3006';
     });
 
 
+*/
+
+/*
 
   describe('GET/:id', () => {
     it('should respond with a single data', (done) => {
@@ -1250,7 +2176,3 @@ describe("/DELETE/:id ", () => {
 //       });
 //   });
 // });
-
-// // describe("/DELETE/:id id does not exist", () => {
-
-

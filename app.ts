@@ -1,30 +1,33 @@
-require('dotenv').config();
+// require('dotenv').config();
 const express=require('express');
 
 var app = express();
 const port = 3006;
 
-import getDataSet from "./routes/getDataSet";
-import addDataSets from "./routes/addDataSets";
-import getDatasetById from "./routes/getDatasetById";
-import updateDataSet from "./routes/updateDataSet";
-import removeDataSet from "./routes/removeDataSet";
-import partialupdate from "./routes/partialupdate";
+
+import {get} from "./helpers/testCon";
+import {post} from "./helpers/testCon";
+import {getbyid} from "./helpers/testCon";
+import {fupdate} from "./helpers/testCon";
+import {remove} from "./helpers/testCon";
+import {pupdate} from "./helpers/testCon";
+import { select } from "./helpers/queries";
+// import testCon from "./helpers/testCon";
 
 
 app.use(express.json());
 
-app.get("/datasets/get", getDataSet);
+app.get("/datasets/get", get);
 
-app.get("/datasets/id/:id", getDatasetById);
+app.get("/datasets/id/:id", getbyid);
 
-app.post("/datasets/addData", addDataSets); 
+app.post("/datasets/addData", post); 
 
-app.put("/datasets/updateData/:id", updateDataSet);
+app.put("/datasets/updateData/:id", fupdate);
 
-app.patch("/datasets/patchData/:id", partialupdate);
+app.patch("/datasets/patchData/:id", pupdate);
 
-app.delete("/datasets/deleteData/:id", removeDataSet);
+app.delete("/datasets/deleteData/:id", remove);
 
 app.all("*",(req:any,res:any)=>{
   const route_error: object= {
@@ -36,10 +39,8 @@ res.status(404).json(route_error);
 
 
 app.listen(port, (error:any) => {
-  if(error)
-  console.log(`error at port ${port}`);
-  else
   console.log(`port number ${port} is working`);
 });
 
-module.exports=app;
+// module.exports=app;
+export default app;

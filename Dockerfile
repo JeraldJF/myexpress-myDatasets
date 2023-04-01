@@ -1,5 +1,4 @@
 
-
 FROM node:18
 
 # Create app directory
@@ -14,13 +13,13 @@ RUN npm install
 
 COPY . .
 
-COPY .env ./
+# COPY .env ./config/
 
 
-RUN npm install dotenv
+# RUN npm install dotenv
 
-ENV NODE_ENV=development
+# ENV NODE_ENV=development
 
 EXPOSE 3006
 
-CMD [ "node", "./dist/routes/dataSets.js" ]
+CMD [ "node", "./dist/app.js" ]

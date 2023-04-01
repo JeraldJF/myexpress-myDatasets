@@ -10,145 +10,241 @@ app.use(express.json());
 import { datatypes_error } from "./errors";
 import { inserted } from "./success";
 import { nodatasets } from "./errors";
-import { insertdata, selectid } from "./queries";
+import { insertdata, selectid, select, deleteid, update } from "./queries";
 import { createdDate, updatedDate } from "./dates";
 
 const { Pool } = require("pg");
 
 var pool = new Pool(config);
-pool.connect();
-function add(){
-async(req: any, res: any) => {
-    var { error } = jsonSchema.validate(req.body, {
-      abortEarly: false,
-    });
-    var dberror = {
-      status: "ERROR",
-      message: "Cannot add datasets",
+
+var get = async (req: any, res: any) => {
+  const con = await pool.connect();
+  // try {
+  let respond = await pool.query(select);
+  if (respond.rowCount != 0) {
+    // display datasets
+    res.status(200).send(respond.rows);
+  } else {
+    //No data in table to display
+    var detail: string = `Table is empty`;
+    var errorStatus: string = "ERROR";
+    const obj1 = {
+      status: `${errorStatus}`,
+      message: `${detail}`,
     };
-    try {
-      var id = req.body.id;
-      var ds = req.body.data_schema;
-      var rc = req.body.router_config;
+    res.sendStatus(404);
+  }
+};
+
+var post = async (req: any, res: any) => {
+  // const con=await pool.connect();
+  var { error } = jsonSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  var id = req.body.id;
+  var ds = req.body.data_schema;
+  var rc = req.body.router_config;
+  var dataSchema = JSON.stringify(ds);
+  var routerConfig = JSON.stringify(rc);
+  var status1: string = req.body.status;
+
+  var createdBy = req.body.created_by;
+  var updatedBy = req.body.updated_by;
+
+  var data = await pool.query(selectid + `'${id}'=id;`);
+  if (data.rowCount == 0) {
+    //no primary key voilation
+    if (error) {
+      //datatype checking
+
+      res.status(422).json(datatypes_error);
+    } else {
+      await pool.query(
+        insertdata +
+          `(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}', '${updatedDate}');`
+      );
+
+      res.status(200).send(insertdata);
+    }
+  } else {
+    //primary key voilation
+
+    var detail: string = `Datasets with Key (id)=(${id}) already exists`;
+    var errorStatus: string = "ERROR";
+    const obj1 = {
+      status: `${errorStatus}`,
+      message: `${detail}`,
+    };
+
+    res.status(409).send(obj1);
+  }
+};
+
+var getbyid = async (req: any, res: any) => {
+  const dberror = {
+    status: "ERROR",
+    message: "Cannot Display Datasets",
+  };
+
+  var id = req.params["id"];
+
+  const dataById = await pool.query(selectid + `id='${id}';`);
+  // (error: any, data: any) => {
+
+  if (dataById.rowCount == 1)
+    //datasets with id available to display
+    res.send(dataById.rows);
+  else {
+    //datasets with id not available to display from the database
+    var detail: string = `Key (id)=(${id}) does not exist.`;
+    var errorStatus: string = "ERROR";
+    const obj1 = {
+      status: `${errorStatus}`,
+      message: `${detail}`,
+    };
+    res.status(404).json(obj1);
+  }
+};
+
+var remove = async (req: any, res: any) => {
+  const error = {
+    status: "ERROR",
+    message: "Cannot delete datasets",
+  };
+  // try {
+  var id = req.params["id"];
+
+  var data = await pool.query(deleteid + `'${id}';`);
+  if (data.rowCount == 1) {
+    //valid id to delete
+
+    var detail: string = `datasets deleted from the table successfully`;
+    var status: string = "SUCCESS";
+
+    const obj1 = {
+      status: `${status}`,
+      message: `${detail}`,
+    };
+
+    res.status(200).json(obj1);
+  } else {
+    //datasets with key not available in database to update
+    var detail: string = `Datasets with Key (id)=(${id}) does not exist. Cannot Delete`;
+    var errorStatus: string = "ERROR";
+    const obj1 = {
+      status: `${errorStatus}`,
+      message: `${detail}`,
+    };
+    res.status(404).json(obj1);
+  }
+};
+
+var pupdate = async (req: any, res: any) => {
+  const { error } = jsonSchema.validate(req.body, {
+    abortEarly: false, //for datatype checking using joi schema
+  });
+  var dberror = {
+    status: "ERROR",
+    message: "Cannot add datasets",
+  };
+
+  // try {
+  var id = req.params["id"];
+
+  var data = await pool.query(selectid + `'${id}'=id`);
+  if (data.rowCount == 1) {
+    if (error) {
+      //wrong datatypes use
+      res.status(422).json(datatypes_error);
+    } else {
+      //given id present in datasets to update
+      var ds = req.body.data_schema || data.rows[0].data_schema;
+      var rc = req.body.router_config || data.rows[0].router_config;
       var dataSchema = JSON.stringify(ds);
       var routerConfig = JSON.stringify(rc);
-      var status1: string = req.body.status;
-  
-      var createdBy = req.body.created_by;
-      var updatedBy = req.body.updated_by;
-  
-      if (id) {
-        //id provided to post
-        pool.query(selectid + `'${id}'=id;`, (err: any, result: any) => {
-          if (err) {
-            res.status(502).json(dberror);
-          } else if (result.rowCount == 0) {
-            //no primary key voilation
-            if (error) {
-              //datatype checking
-  
-              res.status(422).json(datatypes_error);
-            } else {
-              pool.query(
-                insertdata +
-                  `(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${createdDate}', '${updatedDate}');`,
-                (error: any, data: any) => {
-                  if (error) res.status(500).json(dberror);
-                  else {
-                    res.status(200).json(inserted);
-                  }
-                }
-              );
-            }
-          } else {
-            //primary key voilation
-  
-            var detail: string = `Datasets with Key (id)=(${id}) already exists`;
-            var errorStatus: string = "ERROR";
-            const obj1 = {
-              status: `${errorStatus}`,
-              message: `${detail}`,
-            };
-  
-            res.status(409).json(obj1);
-          }
-        });
-      } else {
-        // id not provided to post
-        res.status(400).json(nodatasets);
-      }
-      pool.end;
-    } catch (error: any) {
-      // Database error
-      res.status(500).json(dberror);
-      // console.log(error);
+      var status1: string = req.body.status || data.rows[0].status;
+
+      var createdBy = req.body.created_by || data.rows[0].created_by;
+      var updatedBy = req.body.updated_by || data.rows[0].updated_by;
+      await pool.query(
+        update +
+          `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`
+      );
+
+      //update success
+      var detail: string = `datasets updated in the table successfully`;
+      var status: string = "SUCCESS";
+      const obj1 = {
+        status: `${status}`,
+        message: `${detail}`,
+      };
+      res.status(200).json(obj1);
     }
+  } else {
+    //datasets with key not available in database to update
+    var detail: string = `Datasets with Key (id)=(${id}) does not exist.`;
+    var errorStatus: string = "ERROR";
+    const obj1 = {
+      status: `${errorStatus}`,
+      message: `${detail}`,
+    };
+    res.status(404).json(obj1);
+  }
+};
+
+var fupdate = async (req: any, res: any) => {
+  const { error } = jsonSchema.validate(req.body, {
+    //for datatype checking using joi schema
+    abortEarly: false,
+  });
+  var dberror = {
+    status: "ERROR",
+    message: "Cannot add datasets",
   };
-}
+  // try {
 
+  var id = req.params["id"];
+  var ds = req.body.data_schema;
+  var rc = req.body.router_config;
+  var dataSchema = JSON.stringify(ds);
+  var routerConfig = JSON.stringify(rc);
+  var status1: string = req.body.status;
 
-export default pool;
+  var createdBy = req.body.created_by;
+  var updatedBy = req.body.updated_by;
 
+  if (error) {
+    //wrong datatypes use
+    return res.status(422).json(datatypes_error);
+  } else {
+    var result = await pool.query(
+      update +
+        `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${createdDate}',updated_date='${updatedDate}' WHERE id = '${id}';`
+    );
+    if (result.rowCount == 1) {
+      //given id present in datasets to update
+      var detail: string = `datasets updated in the table successfully`;
+      var status: string = "SUCCESS";
+      const obj1 = {
+        status: `${status}`,
+        message: `${detail}`,
+      };
 
+      res.status(200).json(obj1);
+    } else {
+      //datasets with key not available in database to update
+      var detail: string = `Datasets with Key (id)=(${id}) does not exist.`;
+      var errorStatus: string = "ERROR";
+      const obj1 = {
+        status: `${errorStatus}`,
+        message: `${detail}`,
+      };
+      res.status(404).json(obj1);
+    }
+  }
 
-// export default function(req: Request, res: Response){
-//     // interface newObj {
-//     //   id: string;
-//     //   data_schema?: object;
-//     //   router_config?: object;
-//     //   status?: string;
-//     //   created_by?: string;
-//     //   updated_by?: string;
-//     //   created_date?: Date;
-//     //   updated_date?: Date;
-//     // }
-//     // interface dataObject {
-//     //   body: newObj;
-//     // }
-    
-  
-//     const connectDb = async () => {
-//       try {
-//         const client = new Client({
-//           user: "user1",
-//           host: "localhost",
-//           database: "datasets",
-//           password: "JER@ALD",
-//           port: 5432,
-//         });
-//         await client.connect();
-//         var id = req.query.id;
-        
-        
-        
-  
-//         const gotData = await client.query(
-//           `SELECT * FROM datasets WHERE id='${id}'`
-//         );
-  
-//         if (gotData.rowCount > 0)
-//           res.send(gotData); //datasets with id available to display
-//         else {
-//           //datasets with id not available to display
-//           var detail: string = `Key (id)=(${id}) does not exist.`;
-//           var errorStatus: string = "ERROR";
-//           const obj1 = {
-//             status: `${errorStatus}`,
-//             message: `${detail}`,
-//           };
-//           res.status(400).json(obj1);
-//         }
-//         await client.end();
-//         return true;
-//       } catch (error) {
-//         // Database error
-//         console.log(error);
-//         const obj1 = {
-//           status: "ERROR",
-//           message: "Cannot Display Datasets",
-//         };
-//         res.status(500).json(obj1);
-//       }
-//     };
-//     connectDb();
-//   }
+  pool.end;
+};
+
+export { get, getbyid, post, remove, pupdate, fupdate, pool };

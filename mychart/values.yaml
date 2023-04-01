@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: jerald23sanketika/express
+  repository: jerald23sanketika/mydatasetimage
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.0"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -38,7 +38,7 @@ securityContext: {}
 
 service:
   type: LoadBalancer
-  port: 3001
+  port: 3006
 
 ingress:
   enabled: false

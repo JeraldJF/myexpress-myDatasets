@@ -33,6 +33,7 @@ spec:
       containers:
 
       - name: datasets
+      
 
         image: jerald23sanketika/express:2.0
         
@@ -49,6 +50,8 @@ spec:
         ports:
 
         - containerPort: 3001
+      - name: ao
+      
 ---
 
 apiVersion: v1

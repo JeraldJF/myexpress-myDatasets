@@ -5,9 +5,8 @@
   "scripts": {
     "start": "env-cmd -f ./config/.env nodemon app.ts",
     "build": "tsc",
-    "test": "nyc ts-mocha --timeout 10000 tests/test.ts",
-    
-    "test-with-coverage": "nyc --reporter=html --reporter=text ts-mocha --timeout 10000 tests/test.ts",
+    "test": "mocha --timeout 10000 dist/tests/test.js",
+    "test-with-coverage": "nyc --reporter=html --reporter=text ts-mocha --timeout 10000 tests",
     "coverage-all": "nyc --reporter=html --reporter=text ts-mocha --timeout 10000 tests/test.ts",
     "dev": "ts-node-dev -r tsconfig-paths/register src/main.ts"
   },

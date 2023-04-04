@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 var app = express();
 const port = 3006;

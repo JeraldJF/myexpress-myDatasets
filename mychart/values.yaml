@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: jerald23sanketika/mydatasetimage
+  repository: jerald23sanketika/node-deployment-api
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"

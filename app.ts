@@ -5,12 +5,12 @@ var app = express();
 const port = 3006;
 
 
-import {get} from "./helpers/testCon";
-import {post} from "./helpers/testCon";
-import {getbyid} from "./helpers/testCon";
-import {fupdate} from "./helpers/testCon";
-import {remove} from "./helpers/testCon";
-import {pupdate} from "./helpers/testCon";
+import {get} from "./helpers/src";
+import {post} from "./helpers/src";
+import {getbyid} from "./helpers/src";
+import {fupdate} from "./helpers/src";
+import {remove} from "./helpers/src";
+import {pupdate} from "./helpers/src";
 import { select } from "./helpers/queries";
 // import testCon from "./helpers/testCon";
 

@@ -26,6 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require('dotenv').config();
 var chai = require("chai");
 var chaiHttp = require("chai-http");
 const app_1 = __importDefault(require("../app"));
@@ -270,46 +271,109 @@ describe("/UPDATE:ID", () => {
     });
 });
 describe("/PARTIAL_UPDATE:ID", () => {
-    // it("should PATCH UPDATE datasets of given id", (done) => {
-    //   chai.spy.on(db.pool, "query", () => {
-    //     return { rowCount: 1 };
+    let pdata = {
+        data_schema: {
+            name: "name5",
+            age: 13,
+        },
+        router_config: {
+            name: "name5",
+            age: 13,
+        },
+        status: "Accepted",
+        created_by: "cloud2",
+        updated_by: "user3",
+    };
+    it("should PATCH UPDATE datasets of given id", (done) => {
+        chai.spy.on(db.pool, "query", () => {
+            return { rowCount: 1 };
+        });
+        chai
+            .request(app_1.default)
+            .get("/datasets/id/687")
+            .end((err, response) => {
+            // console.log(response.status);
+            if (response.status == 200) {
+                chai
+                    .request(app_1.default)
+                    .patch("/datasets/patchData/687")
+                    .send(pdata)
+                    .end((err, response) => {
+                    // console.log(response.body);
+                    response.should.have.status(200);
+                    response.body.should.be.an("object");
+                    // expect(response.body).to.be.an("array")
+                    // response.body.length.should.be.eql(0);
+                    chai.spy.restore(db.pool, "query");
+                    done();
+                });
+            }
+        });
+    });
+    //   it("should update individual data for given id if present", (done) => {
+    //     chai.spy.on(db.pool, "query", () => {
+    //       return { rowCount: 0 };
+    //     });
+    //     chai
+    //       .request(app)
+    //       .patch("/datasets/partialupdate/aaa")
+    //       .send(patchDataschema)
+    //       .end((err: any, response: any) => {
+    //         // console.log(response.body);
+    //         expect(response.status).to.be.equal(400);
+    //         expect(response.body).to.be.an("object");
+    //         chai.spy.restore(db.pool, "query");
+    //         done();
+    //       });
     //   });
-    //   chai
-    //     .request(app)
-    //     .get("/datasets/id/46")
-    //     .end((err:any,response:any)=>{
-    //       // console.log(response);
-    //       if(response.status==404){
-    //         chai
-    //         .request(app)
-    //         .patch("/datasets/patchData/76")
-    //         .end((err: any, response: any) => {
-    //           // console.log(response.body);
-    //           response.should.have.status(200);
-    //           response.body.should.be.an("object");
-    //           // expect(response.body).to.be.an("array")
-    //           // response.body.length.should.be.eql(0);
-    //           chai.spy.restore(db.pool, "query");
-    //           done();
-    //         });
-    //       }
-    //     })
-    // });
-    it("should not PATCH UPDATE datasets with given id", (done) => {
+    // it("should update individual data for given id if present", (done) => {
+    //     chai.spy.on(db.pool, "query", () => {
+    //       return { rows: [{}] };
+    //     });
+    //     chai
+    //       .request(app)
+    //       .get("/datasets/getrecord/111")
+    //       .end((err: any, response: any) => {
+    //         if (response.body.status != 200) {
+    //           chai
+    //             .request(app)
+    //             .patch("/datasets/partialupdate/111")
+    //             .send(patchDataschema)
+    //             .end((err: any, response: any) => {
+    //               console.log(response.body);
+    //               console.log(response.status);
+    //               expect(response.status).to.be.equal(200);
+    //               expect(response.body).to.be.an("object");
+    //               chai.spy.restore(db.pool, "query");
+    //               done();
+    //             });
+    //         }
+    //       });
+    //   });
+    it("should not PATCH UPDATE datasets of given id", (done) => {
         chai.spy.on(db.pool, "query", () => {
             return { rowCount: 0 };
         });
         chai
             .request(app_1.default)
-            .patch("/datasets/patchData/56")
+            .get("/datasets/id/687")
             .end((err, response) => {
-            // console.log(response.body);
-            response.should.have.status(404);
-            response.body.should.be.an("object");
-            // expect(response.body).to.be.an("array")
-            // response.body.length.should.be.eql(0);
-            chai.spy.restore(db.pool, "query");
-            done();
+            // console.log(response.status);
+            if (response.status != 200) {
+                chai
+                    .request(app_1.default)
+                    .patch("/datasets/patchData/687")
+                    .send(pdata)
+                    .end((err, response) => {
+                    // console.log(response.body);
+                    response.should.have.status(404);
+                    response.body.should.be.an("object");
+                    // expect(response.body).to.be.an("array")
+                    // response.body.length.should.be.eql(0);
+                    chai.spy.restore(db.pool, "query");
+                    done();
+                });
+            }
         });
     });
     it("invalid datatype to patch", function (done) {

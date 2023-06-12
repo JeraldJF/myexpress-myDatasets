@@ -8,16 +8,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //   port: process.env.DB_PORT,
 // };
 const configure = {
-    port: 5432,
-    user: "user1",
-    host: "10.99.129.133",
-    database: "datasets",
-    password: "JER@ALD",
+    // port: 5432,
     // user: "user1",
-    // host:"localhost",
+    // host:"pgdeploy-postgresql.default.svc.cluster.local",
     // database: "datasets",
     // password:"JER@ALD",
-    // port: 5432,
+    user: "user1",
+    host: "localhost",
+    database: "datasets",
+    password: "JER@ALD",
+    port: 5432,
 };
 exports.default = configure;
 //# sourceMappingURL=config.js.map

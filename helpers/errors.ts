@@ -8,7 +8,7 @@ export const nodatasets: object = {
   message: `No Datasets given`,
 };
 
-// export const database_error:object={
-//     status: "ERROR",
-//     message: "Cannot add datasets",
-// }
+export const database_error:object={
+    status: "ERROR",
+    message: "Cannot add datasets",
+}

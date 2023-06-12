@@ -14,13 +14,19 @@ const schema_1 = __importDefault(require("./schema"));
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 const errors_1 = require("./errors");
+const success_1 = require("./success");
 const queries_1 = require("./queries");
 const dates_1 = require("./dates");
 const { Pool } = require("pg");
 var pool = new Pool(config_1.default);
 exports.pool = pool;
+const con = pool.connect((err) => {
+    if (err)
+        console.log("error connecting");
+    else
+        console.log("Successfully Connected");
+});
 var get = async (req, res) => {
-    const con = await pool.connect();
     // try {
     let respond = await pool.query(queries_1.select);
     if (respond.rowCount != 0) {
@@ -41,9 +47,6 @@ var get = async (req, res) => {
 exports.get = get;
 var post = async (req, res) => {
     // const con=await pool.connect();
-    var { error } = schema_1.default.validate(req.body, {
-        abortEarly: false,
-    });
     var id = req.body.id;
     var ds = req.body.data_schema;
     var rc = req.body.router_config;
@@ -55,6 +58,9 @@ var post = async (req, res) => {
     var data = await pool.query(queries_1.selectid + `'${id}'=id;`);
     if (data.rowCount == 0) {
         //no primary key voilation
+        var { error } = schema_1.default.validate(req.body, {
+            abortEarly: false,
+        });
         if (error) {
             //datatype checking
             res.status(422).json(errors_1.datatypes_error);
@@ -62,7 +68,7 @@ var post = async (req, res) => {
         else {
             await pool.query(queries_1.insertdata +
                 `(id, data_schema, router_config, status, created_by, updated_by, created_date, updated_date) VALUES('${id}', '${dataSchema}', '${routerConfig}', '${status1}', '${createdBy}', '${updatedBy}', '${dates_1.createdDate}', '${dates_1.updatedDate}');`);
-            res.status(200).send(queries_1.insertdata);
+            res.status(200).send(success_1.inserted);
         }
     }
     else {
@@ -142,19 +148,19 @@ var pupdate = async (req, res) => {
     var id = req.params["id"];
     var data = await pool.query(queries_1.selectid + `'${id}'=id`);
     if (data.rowCount == 1) {
+        var ds = req.body.data_schema || data.rows[0].data_schema;
+        var rc = req.body.router_config || data.rows[0].router_config;
+        var dataSchema = JSON.stringify(ds);
+        var routerConfig = JSON.stringify(rc);
+        var status1 = req.body.status || data.rows[0].status;
+        var createdBy = req.body.created_by || data.rows[0].created_by;
+        var updatedBy = req.body.updated_by || data.rows[0].updated_by;
         if (error) {
             //wrong datatypes use
             res.status(422).json(errors_1.datatypes_error);
         }
         else {
             //given id present in datasets to update
-            var ds = req.body.data_schema || data.rows[0].data_schema;
-            var rc = req.body.router_config || data.rows[0].router_config;
-            var dataSchema = JSON.stringify(ds);
-            var routerConfig = JSON.stringify(rc);
-            var status1 = req.body.status || data.rows[0].status;
-            var createdBy = req.body.created_by || data.rows[0].created_by;
-            var updatedBy = req.body.updated_by || data.rows[0].updated_by;
             await pool.query(queries_1.update +
                 `data_schema='${dataSchema}', router_config='${routerConfig}', status='${status1}' ,created_by='${createdBy}', updated_by='${updatedBy}', created_date='${dates_1.createdDate}',updated_date='${dates_1.updatedDate}' WHERE id = '${id}';`);
             //update success

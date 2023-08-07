@@ -22,7 +22,7 @@ var get = async (req: any, res: any) => {
     let respond = await pool.query(select);
     // fetch('http://localhost:8000/api/prometheus/grafana/api/v1/rules?subtype=cortex').then((response)=>response.text()).then((body)=>{
     //   if (body) {
-    if (respond.rowCount > 1) {
+    if (respond.rowCount >= 1) {
       // display datasets
       res.status(200).send(respond.rows);
     } else {

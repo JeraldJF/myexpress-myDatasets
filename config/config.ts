@@ -8,16 +8,21 @@
 //   port: process.env.DB_PORT,
 // };
 const configure = {
-  // port: 5432,
-  // user: "user1",
-  // host:"pgdeploy-postgresql.default.svc.cluster.local",
-  // database: "datasets",
-  // password:"JER@ALD",
+  port: 5432,
   user: "user1",
-  host:"localhost",
+  host:"pgdeploy-postgresql.default.svc.cluster.local",
   database: "datasets",
   password:"JER@ALD",
-  port: 5432,
+  // user: "user1",
+  // host:"localhost",
+  // database: "datasets",
+  // password:"JER@ALD",
+  // port: 5432,
+  // port: 5432,
+  // user: "user1",
+  // host:"host.docker.internal",
+  // database: "datasets",
+  // password:"JER@ALD"
 };
 
 export default configure;

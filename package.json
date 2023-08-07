@@ -5,7 +5,7 @@
   "scripts": {
     "start": "env-cmd -f ./config/.env nodemon app.ts",
     "build": "tsc",
-    "test": "nyc ts-mocha --timeout 10000 routes/*.spec.ts",
+    "test": "nyc --reporter=html ts-mocha --timeout 10000 routes/*.spec.ts",
     "test-with-coverage": "nyc --reporter=html --reporter=text ts-mocha --timeout 10000 tests",
     "coverage-all": "nyc --reporter=html --reporter=text, ts-mocha --timeout 10000 tests/test.ts"
   },

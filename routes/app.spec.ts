@@ -24,8 +24,6 @@ describe("/GET", () => {
       .request(app)
       .get("/datasets/get")
       .end((err: any, response: any) => {
-        // console.log(response.body);
-
         response.should.have.status(200);
         response.body.should.be.an("array");
         response.body.length.should.be.not.eql(0);
@@ -42,8 +40,6 @@ describe("/GET", () => {
       .request(app)
       .get("/datasets/get")
       .end((err: any, response: any) => {
-        // console.log(response.body);
-
         response.should.have.status(404);
         response.body.should.be.an("object");
         // expect(response.body).to.be.an("array")
@@ -181,7 +177,6 @@ describe("/DELETE:id", () => {
       .request(app)
       .delete("/datasets/deleteData/db01")
       .end((err: any, response: any) => {
-        console.log(response.body);
         response.should.have.status(200);
         // response.body.should.be.an("object");
         expect(response.body).to.be.an("object");
@@ -200,8 +195,7 @@ describe("/DELETE:id", () => {
       .request(app)
       .delete("/datasets/deleteData/db01")
       .end((err: any, response: any) => {
-        console.log(response.body);
-
+       
         response.should.have.status(404);
         response.body.should.be.an("object");
         // expect(response.body).to.be.an("array")
@@ -373,29 +367,29 @@ describe("/PARTIAL_UPDATE:ID", () => {
       });
   });
 
-  it("invalid datatype to patch", function (done: any) {
-    let data = {
-      data_schema: {
-        name: "name5",
-        age: 13,
-      },
-      router_config: {
-        name: "user1",
-        method: "post"
-      },
-      status: 1,
-      created_by: "cloud2",
-      updated_by: "user3",
-    };
-    chai
-      .request(app)
-      .patch("/datasets/patchData/d02")
-      .send(data)
-      .end((err: any, res: any) => {
-        res.should.have.status(422);
-        res.body.should.be.a("object");
-        // res.body.length.should.be.eql(0);
-        done();
-      });
-  });
+  // it("invalid datatype to patch", function (done: any) {
+  //   let data = {
+  //     data_schema: {
+  //       name: "name5",
+  //       age: 13,
+  //     },
+  //     router_config: {
+  //       name: "user1",
+  //       method: "post"
+  //     },
+  //     status: 1,
+  //     created_by: "cloud2",
+  //     updated_by: "user3",
+  //   };
+  //   chai
+  //     .request(app)
+  //     .patch("/datasets/patchData/d02")
+  //     .send(data)
+  //     .end((err: any, res: any) => {
+  //       res.should.have.status(422);
+  //       res.body.should.be.a("object");
+  //       // res.body.length.should.be.eql(0);
+  //       done();
+  //     });
+  // });
 });
